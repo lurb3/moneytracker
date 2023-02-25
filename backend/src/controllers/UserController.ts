@@ -17,14 +17,8 @@ export class UserController {
 
   public static async show (req: express.Request, res: express.Response): Promise<void>
   {
-    const userAuth = req.user;
-
-    if (!userAuth) {
-      return res.status(404).json({message: 'User not found'});
-    }
-
     try {
-      const user = await User.findById(userAuth._id);
+      const user = await User.findById(req.user._id);
 
       if (!user) {
         return res.status(404).json({message: 'User not found'});
@@ -40,16 +34,14 @@ export class UserController {
 
   public static async delete (req: express.Request, res: express.Response): Promise<void>
   {
-    const userId = req.params.userId;
-
     try {
-      const user = await User.findById(userId);
+      const user = await User.findById(req.user._id);
 
       if (!user) {
         return res.status(404).json({message: 'User not found'});
       }
       
-      await user.deleteOne({_id: userId});
+      await user.deleteOne({_id: req.user._id});
 
       return res.status(200).json({message: "User deleted successfully"});
     }

@@ -6,7 +6,6 @@ export class UserSettingsController {
   public static async update (req: express.Request, res: express.Response): Promise<void>
   {
     const { totalBudget } = req.body;
-    const userId = req.params.userId;
     const update = { totalBudget };
     const options = {
       new: true, // return the modified document
@@ -14,14 +13,14 @@ export class UserSettingsController {
     };
 
     try {
-      let user = await User.findById(userId);
+      let user = await User.findById(req.user._id);
 
       if (!user){
         res.status(404).json({message: "User not found"});
         return;
       }
 
-      let settings = await UserSettings.findOneAndUpdate({user: userId}, update, options);
+      let settings = await UserSettings.findOneAndUpdate({user: req.user._id}, update, options);
       res.status(201).json(settings);
     } catch (error) {
       console.log(error)

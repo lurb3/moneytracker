@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { UserAuthentication } from '../controllers/UserAuthentication';
+import { UserAuthenticationController } from '../controllers/UserAuthenticationController';
 
 const userAuthenticationRoute = new Router();
-userAuthenticationRoute.post('/register', UserAuthentication.signup);
-userAuthenticationRoute.post('/login', UserAuthentication.signin);
+
+userAuthenticationRoute.post('/register', UserAuthenticationController.signup);
+userAuthenticationRoute.post('/login', UserAuthenticationController.signin);
 
 export default userAuthenticationRoute;

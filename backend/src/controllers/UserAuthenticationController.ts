@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { User } from '../models/user';
 
-export class UserAuthentication {
+export class UserAuthenticationController {
   public static async signup (req: express.Request, res: express.Response): Promise<void>
   {
     const { username, email, password } = req.body;

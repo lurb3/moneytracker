@@ -25,7 +25,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/api', [
   routes.userRoute,
   routes.userSettingsRoute,
-  routes.userAuthenticationRoute
+  routes.userAuthenticationRoute,
+  routes.userExpensesRoute
 ]);
 
 // Start the server
