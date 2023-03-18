@@ -48,6 +48,7 @@ export class UserAuthenticationController {
           }
         );
 
+        user.password = null;
         user.token = token;
 
         res.status(200).json(user);

@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 import routes from './routes';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -11,11 +12,7 @@ mongoose.set('strictQuery', true);
 // Connect to the MongoDB database
 mongoose.connect(process.env.NODE_ENV === 'development' ? 'mongodb://localhost/moneytracker' : process.env.MONGO_URL);
 
-// Define a simple schema
-const UserSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-});
+app.use(cors())
 
 // Parse incoming requests data
 app.use(bodyParser.json());
@@ -30,8 +27,8 @@ app.use('/api', [
 ]);
 
 // Start the server
-app.listen(3000, () => {
-  console.log('Server started on http://localhost:3000');
+app.listen(3100, () => {
+  console.log('Server started on http://localhost:3100');
 });
 
 export default app;

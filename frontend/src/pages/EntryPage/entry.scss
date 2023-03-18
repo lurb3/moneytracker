@@ -1,0 +1,49 @@
+.entryPageWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+
+  .entryLogo {
+    align-self: center;
+    max-width: 100%;
+  }
+
+  .entryHeader {
+    h1 {
+      font-size: 32px;
+      color: #212325;
+      font-weight: bold;
+      text-align: center;
+      line-height: 39px;
+    }
+    p {
+      font-size: 20px;
+      color: #91919F;
+      text-align: center;
+    }
+  }
+
+  .entryFooter {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+
+    button {
+      color: #FCFCFC;
+      border-radius: 16px;
+      outline: 0;
+      border: 0;
+      padding: 15px 0px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .signUpButton {
+      margin-bottom: 10px;
+      background-color: #161719;
+    }
+    .loginButton {
+      background-color: #292B2D;
+    }
+  }
+}
