@@ -1,16 +1,17 @@
 import React from 'react';
 import { useForm } from "react-hook-form";
 import { useNavigate } from 'react-router-dom';
-import request from 'utils/axios.interceptors';
+import useAxios from 'utils/axios.interceptors';
 import './login.scss';
 
 const LoginPage = () => {
+  const api = useAxios();
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = async (data, e) => {
     e.preventDefault();
-    const user = await request.post('/api/login', data);
+    const user = await api.post('/api/login', data);
 
     if (user.data) {
       localStorage.setItem('token', user.data.token);

@@ -41,9 +41,11 @@ export class UserExpensesController {
 
   public static async create (req: express.Request, res: express.Response): Promise<void>
   {
-    let { total, date = new Date().toISOString(), description, category } = req.body;
+    let { name, total, date = new Date().toISOString(), description, category } = req.body;
 
-    const expense = new UserExpenses({ total, date, description, category, user: req.user._id });
+    date = parse(date, 'dd-MM-yyyy', new Date());
+
+    const expense = new UserExpenses({ name, total, date, description, category, user: req.user._id });
 
     try {
       await expense.save();

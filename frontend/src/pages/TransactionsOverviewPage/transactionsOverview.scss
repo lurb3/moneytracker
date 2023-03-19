@@ -1,7 +1,6 @@
 .transactionsWrapper {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   padding-bottom: 20px;
   min-height: 100vh;
   .transactionsHeader {
@@ -30,5 +29,63 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+
+  .transactionsContent {
+    width: 100%;
+    margin-top: 20px;
+
+    .transactionsCard {
+      display: flex;
+      text-align: left;
+      width: 100%;
+      background-color: #f9f9f9;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 24px;
+      min-height: 89px;
+
+      .categoryImage {
+        max-width: 50px;
+        margin-right: 10px;
+      }
+
+      .cardContent {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+
+        .transactionTotal {
+          color: #FD3C4A;
+          font-size: 16px;
+          font-weight: bold;
+          margin-left: auto;
+        }
+
+        .transactionDate {
+          color: #91919F;
+          font-size: 13px;
+          font-weight: bold;
+          margin-left: auto;
+        }
+
+        .transactionName {
+          color: #292B2D;
+          font-size: 16px;
+          font-weight: bold;
+        }
+
+        .transactionDescription {
+          color: #91919F;
+          font-size: 13px;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  .transactionsFooter {
+    margin-top: auto;
   }
 }
