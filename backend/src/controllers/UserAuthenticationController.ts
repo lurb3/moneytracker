@@ -9,7 +9,7 @@ export class UserAuthenticationController {
     const { username, email, password } = req.body;
     const user = new User({username, email, password});
     const token = jwt.sign(
-      { _id: user._id, email },
+      { _id: user._id, email, username },
       process.env.TOKEN_KEY,
       {
         expiresIn: "2h",
@@ -41,7 +41,7 @@ export class UserAuthenticationController {
       if (user && (await bcrypt.compare(password, user.password))) {
         // Create token
         const token = jwt.sign(
-          { _id: user._id, email },
+          { _id: user._id, email, username: user.username },
           process.env.TOKEN_KEY,
           {
             expiresIn: "2h",

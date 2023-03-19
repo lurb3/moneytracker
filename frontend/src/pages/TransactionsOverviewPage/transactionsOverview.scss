@@ -1,0 +1,34 @@
+.transactionsWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  min-height: 100vh;
+  .transactionsHeader {
+    margin-top: 20px;
+  }
+
+  .transactionsNavigation {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .financialButton {
+    width: 100%;
+    color: #7F3DFF;
+    border-radius: 8px;
+    outline: 0;
+    border: 0;
+    padding: 15px 15px;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: #EEE5FF;
+    margin-top: 20px;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

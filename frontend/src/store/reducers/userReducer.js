@@ -5,13 +5,13 @@ const userSlice = createSlice({
   initialState: {
     username: '',
     email: '',
-    token: '',
+    _id: ''
   },
   reducers: {
     setUser: (state, { payload }) => {
       state.username = payload.username;
       state.email = payload.email;
-      state.token = payload.token;
+      state._id = payload._id;
     },
   },
 });

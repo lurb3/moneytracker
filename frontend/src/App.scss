@@ -1,3 +1,46 @@
 body {
-  padding: 0px 20px;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 18px;
+}
+
+.pageWrapper {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.primaryButton {
+  color: #FCFCFC;
+  border-radius: 16px;
+  outline: 0;
+  border: 0;
+  padding: 15px 0px;
+  font-size: 18px;
+  cursor: pointer;
+  background-color: #161719;
+  margin-top: 20px;
+}
+
+.primaryLink {
+  text-decoration: underline;
+  color: #161719;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.inputField {
+  &::placeholder {
+    color: #91919F;
+  }
+  border-radius: 16px;
+  outline: 0;
+  border: 1px solid #F1F1FA;
+  padding: 15px 15px;
+  font-size: 15px;
+  color: #161719;
+  margin-bottom: 10px;
 }

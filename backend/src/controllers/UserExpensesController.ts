@@ -6,13 +6,12 @@ import mongoose from 'mongoose';
 export class UserExpensesController {
   public static async index (req: express.Request, res: express.Response): Promise<void>
   {
-    let { fromDate, toDate} = req.body;
+    let { fromDate, toDate} = req.query;
     const userId = new mongoose.Types.ObjectId(req.user._id);
 
     fromDate = fromDate ? parse(fromDate, 'dd-MM-yyyy', new Date()) : new Date();
     toDate = toDate ? parse(toDate, 'dd-MM-yyyy', new Date()) : new Date();
 
-    //const expenses = await UserExpenses.find({ user: req.user._id, date: {$gte: new Date(fromDate), $lte: new Date(toDate)} });
     const expenses = await UserExpenses.aggregate([
       {
         $match: {
@@ -26,6 +25,14 @@ export class UserExpensesController {
           expenses: { $push: '$$ROOT' },
           total: { $sum: '$total' }
         }
+      },
+      {
+        $unwind: '$expenses'
+      },
+      {
+        $replaceRoot: {
+          newRoot: '$expenses'
+        }
       }
     ]);
 
@@ -34,22 +41,19 @@ export class UserExpensesController {
 
   public static async create (req: express.Request, res: express.Response): Promise<void>
   {
-    let { total, date  } = req.body;
+    let { total, date = new Date().toISOString(), description, category } = req.body;
+    console.log(parse(date, 'dd-MM-yyyy', new Date()))
+    //date = format(parseISO(date), 'yyyy-MM-dd');
+    //date = parse(date, 'dd-MM-yyyy', new Date());
 
-    if (!date) {
-      date = new Date();
-    } else {
-      date = parse(date, 'dd-MM-yyyy', new Date());
-    }
-
-    const expense = new UserExpenses({ total, date, user: req.user._id });
+    const expense = new UserExpenses({ total, date, description, category, user: req.user._id });
 
     try {
       await expense.save();
       res.status(201).json(expense);
     } catch (error) {
       console.log(error)
-      res.status(500).send(error);
+      res.status(400).send(error);
     }
   }
 

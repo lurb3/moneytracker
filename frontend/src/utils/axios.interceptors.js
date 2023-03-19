@@ -1,5 +1,5 @@
 import axios from "axios";
-//import router from "@/router";
+import { useNavigate } from 'react-router-dom';
 
 const request = axios;
 
@@ -7,13 +7,11 @@ request.defaults.baseURL = process.env.REACT_APP_API_URL;
 
 request.interceptors.request.use(
   (config) => {
-    // const token = localStorage.getItem("token");
-    // config.headers.setContentType("application/json");
-    // config.headers["withCredentials"] = "true";
-    // config.headers.Authorization = `Bearer ${token}`;
+    const token = localStorage.getItem("token");
+    config.headers.setContentType("application/json");
+    config.headers["withCredentials"] = "true";
+    config.headers.Authorization = `Bearer ${token}`;
 
-    // Add your request interceptors here
-    // Example: config.headers.Authorization = 'Bearer YOUR_TOKEN';
     return config;
   },
   (error) => {
@@ -27,10 +25,11 @@ request.interceptors.response.use(
     return response;
   },
   (error) => {
+    const navigate = useNavigate();
     // Example: handle unauthorized errors
     if (error.response.status === 401) {
-      //localStorage.removeItem("token");
-      //router.push("/login");
+      localStorage.removeItem("token");
+      navigate("/login");
     }
     return Promise.reject(error);
   }
