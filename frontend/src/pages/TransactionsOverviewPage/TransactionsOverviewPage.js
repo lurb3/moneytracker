@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import request from 'utils/axios.interceptors';
-import { selectors as userSelector } from 'store/reducers/userReducer';
 import TransactionsForm from './TransactionsForm';
 import ArrowRight from '../../assets/arrow-right.svg';
 import './transactionsOverview.scss';
@@ -16,7 +14,7 @@ const TransactionsOverviewPage = () => {
         const expenses = await request.get('/api/user_expenses', {
           params: {
             fromDate: '15-02-2023',
-            toDate: '19-03-2023'
+            toDate: '20-03-2023'
           }
         });
         setUserExpenses(expenses.data);
