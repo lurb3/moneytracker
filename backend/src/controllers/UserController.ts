@@ -6,6 +6,7 @@ export class UserController {
   public static async create (req: express.Request, res: express.Response): Promise<void>
   {
     const { username, email, password } = req.body;
+
     const user = new User({username, email, password});
 
     try {
