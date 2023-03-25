@@ -3,20 +3,6 @@ import { AuthenticatedRequest } from '../interfaces/AuthenticatedRequest.interfa
 import { User } from '../models/user';
 
 export class UserController {
-  public static async create (req: express.Request, res: express.Response): Promise<void>
-  {
-    const { username, email, password } = req.body;
-
-    const user = new User({username, email, password});
-
-    try {
-      await user.save();
-      res.status(201).json(Object.assign({}, user.toObject(), { password: undefined }));
-    } catch (error) {
-      res.status(500).send(error);
-    }
-  }
-
   public static async show (req: AuthenticatedRequest<express.Request>, res: express.Response): Promise<void>
   {
     try {

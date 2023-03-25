@@ -4,10 +4,18 @@ import bcrypt from 'bcryptjs';
 import { User } from '../models/user';
 
 export class UserAuthenticationController {
-  public static async signup (req: express.Request, res: express.Response): Promise<void>
+  public static async create (req: express.Request, res: express.Response): Promise<void>
   {
     const { username, email, password } = req.body;
-    const user = new User({username, email, password});
+    
+    const duplicateUser = await User.findOne({ email });
+
+    if (duplicateUser) {
+      res.status(400).json({message: "Email already in use"});
+      return;
+    }
+
+    const user = new User({ username, email, password });
     const token = jwt.sign(
       { _id: user._id, email, username },
       process.env.TOKEN_KEY || '',
@@ -35,11 +43,9 @@ export class UserAuthenticationController {
         res.status(400).send("All input is required");
       }
 
-      // Validate if user exist in our database
       const user = await User.findOne({ email });
 
       if (user && (await bcrypt.compare(password, user.password))) {
-        // Create token
         const token = jwt.sign(
           { _id: user._id, email, username: user.username },
           process.env.TOKEN_KEY || '',
