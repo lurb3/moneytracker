@@ -27,7 +27,7 @@ const TransactionsForm = ({ isOpen = false, setIsOpen = () => {}, loadTransactio
       console.log(e)
       Swal.fire({
         title: 'Failed to create transaction',
-        text: e.message,
+        text: e.message ?? 'Unknown error',
         icon: 'error',
         confirmButtonText: 'Close',
       })

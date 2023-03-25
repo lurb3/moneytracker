@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useContext } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Swal from 'sweetalert2';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
@@ -35,7 +35,7 @@ const TransactionsOverviewPage = () => {
     } catch (e) {
       Swal.fire({
         title: 'Failed to load transactions',
-        text: e.message,
+        text: e.message ?? 'Unknown error',
         icon: 'error',
         confirmButtonText: 'Close',
       })
