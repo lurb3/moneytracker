@@ -1,8 +1,8 @@
-import express, { RequestHandler } from 'express';
+import express, { RequestHandler, Request, Response, NextFunction } from 'express';
 import { AuthenticatedRequest } from '../interfaces/AuthenticatedRequest.interface';
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-const verifyToken: RequestHandler = (req, res, next) => {
+const verifyToken: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
   let token = req.headers['authorization'];
 
   if (!token) {
