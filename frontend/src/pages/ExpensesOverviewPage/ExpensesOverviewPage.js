@@ -6,11 +6,11 @@ import { Button, DatePicker } from 'antd';
 import { format } from 'date-fns';
 import dayjs from 'dayjs';
 import useAxios from 'utils/axios.interceptors';
-import TransactionsForm from './TransactionsForm';
+import ExpensesForm from './ExpensesForm';
 import CategoryPlaceholder from '../../assets/category-placeholder.svg';
-import './transactionsOverview.scss';
+import './expensesOverview.scss';
 
-const TransactionsOverviewPage = () => {
+const ExpensesOverviewPage = () => {
   const [ isLoading, setIsLoading ] = useState(false);
   const [ openForm, setOpenForm ] = useState(false);
   const [ timeInterval, setTimeInterval ] = useState([dayjs(), dayjs()]);
@@ -34,7 +34,7 @@ const TransactionsOverviewPage = () => {
       setIsLoading(false);
     } catch (e) {
       Swal.fire({
-        title: 'Failed to load transactions',
+        title: 'Failed to load expenses',
         text: e.message ?? 'Unknown error',
         icon: 'error',
         confirmButtonText: 'Close',
@@ -49,11 +49,11 @@ const TransactionsOverviewPage = () => {
 
   return (
     <div className='pageWrapper'>
-      <TransactionsForm isOpen={openForm} setIsOpen={setOpenForm} loadTransactions={loadData} />
-      <h1>Transactions Overview</h1>
-      <div className='transactionsWrapper'>
-        <div className='transactionsHeader'>
-          <div className='transactionsNavigation'>
+      <ExpensesForm isOpen={openForm} setIsOpen={setOpenForm} loadExpenses={loadData} />
+      <h1>Expenses Overview</h1>
+      <div className='expensesWrapper'>
+        <div className='expensesHeader'>
+          <div className='expensesNavigation'>
             <RangePicker
               defaultValue={timeInterval}
               className='inputField'
@@ -62,28 +62,28 @@ const TransactionsOverviewPage = () => {
             />
           </div>
           <Button type="primary" size='large' onClick={loadData} loading={isLoading}>
-            Load transactions
+            Load expenses
           </Button>
         </div>
 
-        <div className='transactionsContent'>
+        <div className='expensesContent'>
           {
             userExpenses.map((expense) => (
-              <div className='transactionsCard' key={expense._id}>
+              <div className='expensesCard' key={expense._id}>
                 <img className='categoryImage' src={CategoryPlaceholder} alt='Category placeholder'/>
                 <div className='cardContent'>
-                  <span className='transactionName'>{expense.name}</span>
-                  {expense.description && <span className='transactionDescription'>{expense.description}</span>}
+                  <span className='expenseName'>{expense.name}</span>
+                  {expense.description && <span className='expenseDescription'>{expense.description}</span>}
                 </div>
                 <div className='cardContent' style={{marginLeft: 'auto'}}>
-                  <span className='transactionTotal'>- {expense.total} €</span>
-                  <span className='transactionDate'>{format(new Date(expense.date), 'dd-MM-yyyy')}</span>
+                  <span className='expenseTotal'>- {expense.total} €</span>
+                  <span className='expenseDate'>{format(new Date(expense.date), 'dd-MM-yyyy')}</span>
                 </div>
               </div>
             ))
           }
         </div>
-        <div className='transactionsFooter'>
+        <div className='expensesFooter'>
           <FontAwesomeIcon onClick={() => setOpenForm(true)} icon={faCirclePlus} size='3x' color='#00b96b'/>
         </div>
       </div>
@@ -91,4 +91,4 @@ const TransactionsOverviewPage = () => {
   )
 }
 
-export default TransactionsOverviewPage;
+export default ExpensesOverviewPage;

@@ -3,9 +3,9 @@ import { useForm, Controller } from "react-hook-form";
 import { DatePicker } from 'antd';
 import Swal from 'sweetalert2';
 import useAxios from 'utils/axios.interceptors';
-import './transactionsForm.scss';
+import './expensesForm.scss';
 
-const TransactionsForm = ({ isOpen = false, setIsOpen = () => {}, loadTransactions }) => {
+const ExpensesForm = ({ isOpen = false, setIsOpen = () => {}, loadExpenses }) => {
   const api = useAxios();
   const { register, handleSubmit, control, setValue, reset, formState: { errors } } = useForm();
 
@@ -16,17 +16,17 @@ const TransactionsForm = ({ isOpen = false, setIsOpen = () => {}, loadTransactio
     await api.post('/api/user_expenses', data);
     Swal.fire({
       icon: 'success',
-      title: 'Transaction created',
+      title: 'Expense created',
       showConfirmButton: false,
       timer: 1500
     })
-    await loadTransactions();
+    await loadExpenses();
     setIsOpen(false);
     reset();
     } catch(e) {
       console.log(e)
       Swal.fire({
-        title: 'Failed to create transaction',
+        title: 'Failed to create expense',
         text: e.message ?? 'Unknown error',
         icon: 'error',
         confirmButtonText: 'Close',
@@ -35,9 +35,9 @@ const TransactionsForm = ({ isOpen = false, setIsOpen = () => {}, loadTransactio
   }
 
   return (
-    <div className='transactionsFormWrapper'>
+    <div className='expensesFormWrapper'>
       <div className='closeForm' onClick={() => setIsOpen(false)}></div>
-      <form className='transactionsFormCard' onSubmit={handleSubmit(onSubmit)}>
+      <form className='expensesFormCard' onSubmit={handleSubmit(onSubmit)}>
         <input className='inputField' type='text' placeholder='Name' name='name' {...register("name")} />
         <input className='inputField' type='text' placeholder='Category' name='email' {...register("category")} />
         <input className='inputField' type='text' placeholder='Brief description' name='description' {...register("description")} />
@@ -53,10 +53,10 @@ const TransactionsForm = ({ isOpen = false, setIsOpen = () => {}, loadTransactio
             />
           )}
         />
-        <input className='primaryButton' type='submit' value='Add transaction' />
+        <input className='primaryButton' type='submit' value='Add expense' />
       </form>
     </div>
   )
 }
 
-export default TransactionsForm
+export default ExpensesForm
