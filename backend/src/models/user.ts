@@ -1,15 +1,11 @@
 import bcrypt from 'bcryptjs';
-import { Document, Schema, model, Model } from "mongoose";
+import mongoose from "mongoose";
 
-interface UserDocument extends Document {
-  username: string;
-  email: string;
-  password: string;
-  token?: string;
-  createdAt?: Date;
+interface UserPreSave {
+  password: string,
 }
 
-const userSchema = new Schema<UserDocument>({
+const userSchema = new mongoose.Schema({
   username: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
@@ -17,7 +13,7 @@ const userSchema = new Schema<UserDocument>({
   createdAt: { type: Date, default: Date.now },
 });
 
-userSchema.pre<UserDocument>('save', async function(next: () => any) {
+userSchema.pre<UserPreSave>('save', async function(next: () => any) {
   try {
     // Generate a salt and hash the password
     const salt = await bcrypt.genSalt(10);
@@ -31,4 +27,4 @@ userSchema.pre<UserDocument>('save', async function(next: () => any) {
   }
 });
 
-export const User: Model<UserDocument> = model<UserDocument>('User', userSchema);
+export const User = mongoose.model('User', userSchema);

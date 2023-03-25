@@ -1,11 +1,14 @@
 import express from 'express';
+import userSchema from '../schemas/userSchema';
+import { z } from 'zod';
 import { AuthenticatedRequest } from '../interfaces/AuthenticatedRequest.interface';
 import { User } from '../models/user';
 
 export class UserController {
   public static async create (req: express.Request, res: express.Response): Promise<void>
-  {
+  {  
     const { username, email, password } = req.body;
+
     const user = new User({username, email, password});
 
     try {
