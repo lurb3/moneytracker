@@ -1,29 +1,37 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
-import { format } from 'date-fns';
 import Swal from 'sweetalert2';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
+import { Button, DatePicker } from 'antd';
+import { format } from 'date-fns';
+import dayjs from 'dayjs';
 import useAxios from 'utils/axios.interceptors';
 import TransactionsForm from './TransactionsForm';
-import ArrowRight from '../../assets/arrow-right.svg';
 import CategoryPlaceholder from '../../assets/category-placeholder.svg';
 import './transactionsOverview.scss';
 
 const TransactionsOverviewPage = () => {
-  const [ userExpenses, setUserExpenses ] = useState([]);
+  const [ isLoading, setIsLoading ] = useState(false);
   const [ openForm, setOpenForm ] = useState(false);
+  const [ timeInterval, setTimeInterval ] = useState([dayjs(), dayjs()]);
+  const [ userExpenses, setUserExpenses ] = useState([]);
+
   const apiRef = useRef(useAxios());
+  const { RangePicker } = DatePicker;
+
+  const dateFormat = 'DD-MM-YYYY';
 
   const loadData = async () => {
-  
+    setIsLoading(true);
     try {
       const expenses = await apiRef.current.get('/api/user_expenses', {
         params: {
-          fromDate: '15-02-2023',
-          toDate: '20-03-2023'
+          fromDate: timeInterval[0],
+          toDate: timeInterval[1]
         }
       });
       setUserExpenses(expenses.data);
+      setIsLoading(false);
     } catch (e) {
       Swal.fire({
         title: 'Failed to load transactions',
@@ -31,6 +39,7 @@ const TransactionsOverviewPage = () => {
         icon: 'error',
         confirmButtonText: 'Close',
       })
+      setIsLoading(false);
     }
   }
 
@@ -45,13 +54,16 @@ const TransactionsOverviewPage = () => {
       <div className='transactionsWrapper'>
         <div className='transactionsHeader'>
           <div className='transactionsNavigation'>
-            <div>Month</div>
-            <div>Hamburguer</div>
+            <RangePicker
+              defaultValue={timeInterval}
+              className='inputField'
+              format={dateFormat}
+              onChange={(e, value) => setTimeInterval(value)}
+            />
           </div>
-          <button className='financialButton'>
-            See your financial report
-            <img alt='arrow right' src={ArrowRight}/>
-          </button>
+          <Button type="primary" size='large' onClick={loadData} loading={isLoading}>
+            Load transactions
+          </Button>
         </div>
 
         <div className='transactionsContent'>
@@ -72,7 +84,7 @@ const TransactionsOverviewPage = () => {
           }
         </div>
         <div className='transactionsFooter'>
-          <FontAwesomeIcon onClick={() => setOpenForm(true)} icon={faCirclePlus} size='3x' color='green'/>
+          <FontAwesomeIcon onClick={() => setOpenForm(true)} icon={faCirclePlus} size='3x' color='#00b96b'/>
         </div>
       </div>
     </div>
