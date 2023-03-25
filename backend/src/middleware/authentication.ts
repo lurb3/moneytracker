@@ -1,6 +1,8 @@
-import jwt from "jsonwebtoken";
+import express, { RequestHandler } from 'express';
+import { AuthenticatedRequest } from '../interfaces/AuthenticatedRequest.interface';
+import jwt, { JwtPayload } from "jsonwebtoken";
 
-const verifyToken = (req, res, next) => {
+const verifyToken: RequestHandler = (req, res, next) => {
   let token = req.headers['authorization'];
 
   if (!token) {
@@ -10,8 +12,10 @@ const verifyToken = (req, res, next) => {
   token = token.split(' ')[1];
 
   try {
-    const decoded = jwt.verify(token, process.env.TOKEN_KEY);
-    req.user = decoded;
+    const decoded= jwt.verify(token, process.env.TOKEN_KEY || '') as JwtPayload;
+    (req as AuthenticatedRequest<express.Request>).user = {
+      _id: decoded._id,
+    };
   } catch (err) {
     return res.status(401).send("Invalid Token");
   }

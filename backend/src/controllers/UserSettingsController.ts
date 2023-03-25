@@ -1,9 +1,10 @@
 import express from 'express';
+import { AuthenticatedRequest } from '../interfaces/AuthenticatedRequest.interface';
 import { UserSettings } from '../models/userSettings';
 import { User } from '../models/user';
 
 export class UserSettingsController {
-  public static async update (req: express.Request, res: express.Response): Promise<void>
+  public static async update (req: AuthenticatedRequest<express.Request>, res: express.Response): Promise<void>
   {
     const { totalBudget } = req.body;
     const update = { totalBudget };

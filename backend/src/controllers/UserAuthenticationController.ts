@@ -10,7 +10,7 @@ export class UserAuthenticationController {
     const user = new User({username, email, password});
     const token = jwt.sign(
       { _id: user._id, email, username },
-      process.env.TOKEN_KEY,
+      process.env.TOKEN_KEY || '',
       {
         expiresIn: "2h",
       }
@@ -42,7 +42,7 @@ export class UserAuthenticationController {
         // Create token
         const token = jwt.sign(
           { _id: user._id, email, username: user.username },
-          process.env.TOKEN_KEY,
+          process.env.TOKEN_KEY || '',
           {
             expiresIn: "2h",
           }

@@ -1,16 +1,22 @@
 import express from 'express';
 import { parse } from 'date-fns'
 import { UserExpenses } from '../models/userExpenses';
+import { AuthenticatedRequest } from '../interfaces/AuthenticatedRequest.interface';
 import mongoose from 'mongoose';
 
+interface ExpenseQuery {
+  fromDate?: string | Date,
+  toDate?: string | Date
+}
+
 export class UserExpensesController {
-  public static async index (req: express.Request, res: express.Response): Promise<void>
+  public static async index (req: AuthenticatedRequest<ExpenseQuery>, res: express.Response): Promise<void>
   {
-    let { fromDate, toDate} = req.query;
+    let { fromDate, toDate } = req.query;
     const userId = new mongoose.Types.ObjectId(req.user._id);
 
-    fromDate = fromDate ? parse(fromDate, 'dd-MM-yyyy', new Date()) : new Date();
-    toDate = toDate ? parse(toDate, 'dd-MM-yyyy', new Date()) : new Date();
+    fromDate = fromDate ? parse(fromDate.toString(), 'dd-MM-yyyy', new Date()).toISOString() : new Date().toISOString();
+    toDate = toDate ? parse(toDate.toString(), 'dd-MM-yyyy', new Date()).toISOString() : new Date().toISOString();
 
     const expenses = await UserExpenses.aggregate([
       {
@@ -39,7 +45,7 @@ export class UserExpensesController {
     res.status(200).json(expenses);
   }
 
-  public static async create (req: express.Request, res: express.Response): Promise<void>
+  public static async create (req: AuthenticatedRequest<express.Request>, res: express.Response): Promise<void>
   {
     let { name, total, date = new Date().toISOString(), description, category } = req.body;
 

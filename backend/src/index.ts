@@ -10,7 +10,7 @@ const app = express();
 mongoose.set('strictQuery', true);
 
 // Connect to the MongoDB database
-mongoose.connect(process.env.NODE_ENV === 'development' ? 'mongodb://localhost/moneytracker' : process.env.MONGO_URL);
+mongoose.connect(process.env.NODE_ENV === 'development' ? 'mongodb://localhost/moneytracker' : process.env.MONGO_URL || '');
 
 app.use(cors())
 
