@@ -14,6 +14,7 @@ export class UserController {
       }
 
       res.status(200).json(user);
+      return;
     }
     catch (err: unknown) {
       console.error(err);

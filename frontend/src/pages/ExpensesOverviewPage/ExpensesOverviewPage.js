@@ -11,6 +11,7 @@ import CategoryPlaceholder from '../../assets/category-placeholder.svg';
 import './expensesOverview.scss';
 
 const ExpensesOverviewPage = () => {
+  const dateFormat = 'DD-MM-YYYY';
   const [ isLoading, setIsLoading ] = useState(false);
   const [ openForm, setOpenForm ] = useState(false);
   const [ timeInterval, setTimeInterval ] = useState([dayjs(), dayjs()]);
@@ -19,15 +20,14 @@ const ExpensesOverviewPage = () => {
   const apiRef = useRef(useAxios());
   const { RangePicker } = DatePicker;
 
-  const dateFormat = 'DD-MM-YYYY';
-
   const loadData = async () => {
     setIsLoading(true);
+
     try {
       const expenses = await apiRef.current.get('/api/user_expenses', {
         params: {
-          fromDate: timeInterval[0],
-          toDate: timeInterval[1]
+          fromDate: dayjs(timeInterval[0], 'DD-MM-YYYY').format(dateFormat),
+          toDate: dayjs(timeInterval[1], 'DD-MM-YYYY').format(dateFormat)
         }
       });
       setUserExpenses(expenses.data);

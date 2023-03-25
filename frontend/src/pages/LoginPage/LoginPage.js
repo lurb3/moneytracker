@@ -1,12 +1,13 @@
 import React from 'react';
 import { useForm } from "react-hook-form";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import useAxios from 'utils/axios.interceptors';
 import './login.scss';
 
 const LoginPage = () => {
   const api = useAxios();
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
   const { register, handleSubmit, formState: { errors } } = useForm();
 
   const onSubmit = async (data, e) => {
@@ -18,6 +19,8 @@ const LoginPage = () => {
       navigate('/expenses-overview');
     }
   }
+
+  if (token) return <Navigate to='/expenses-overview' replace />;
 
   return (
     <div className='pageWrapper loginPageWrapper'>

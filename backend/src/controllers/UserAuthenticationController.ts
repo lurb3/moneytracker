@@ -29,6 +29,7 @@ export class UserAuthenticationController {
     try {
       await user.save();
       res.status(201).json(Object.assign({}, user.toObject(), { password: undefined }));
+      return;
     } catch (error) {
       res.status(500).send(error);
     }
@@ -41,6 +42,7 @@ export class UserAuthenticationController {
   
       if (!(email && password)) {
         res.status(400).send("All input is required");
+        return;
       }
 
       const user = await User.findOne({ email });
@@ -61,6 +63,7 @@ export class UserAuthenticationController {
         return;
       }
       res.status(400).send("Invalid Credentials");
+      return;
     } catch (err) {
       console.log(err);
     }

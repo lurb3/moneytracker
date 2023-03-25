@@ -1,14 +1,17 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate, Navigate } from 'react-router-dom'; 
 import Logo from 'assets/entry-page-logo.svg';
 import './entry.scss'
 
 const EntryPage = () => {
+  const token = localStorage.getItem('token');
   const navigate = useNavigate();
 
   const changeRoute = (route) => {
     navigate(route);
   }
+
+  if (token) return <Navigate to='/expenses-overview' replace />;
 
   return (
     <div className='entryPageWrapper'>
