@@ -15,7 +15,7 @@ const LoginPage = () => {
 
     if (user.data) {
       localStorage.setItem('token', user.data.token);
-      navigate('/transactions-overview');
+      navigate('/expenses-overview');
     }
   }
 

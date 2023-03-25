@@ -1,13 +1,13 @@
-.transactionsWrapper {
+.expensesWrapper {
   display: flex;
   flex-direction: column;
   padding-bottom: 20px;
   min-height: 100vh;
-  .transactionsHeader {
+  .expensesHeader {
     margin-top: 20px;
   }
 
-  .transactionsNavigation {
+  .expensesNavigation {
     display: flex;
     flex-direction: row;
     margin-bottom: 20px;
@@ -20,11 +20,11 @@
     }
   }
 
-  .transactionsContent {
+  .expensesContent {
     width: 100%;
     margin-top: 20px;
 
-    .transactionsCard {
+    .expensesCard {
       display: flex;
       text-align: left;
       width: 100%;
@@ -45,27 +45,27 @@
         justify-content: space-between;
         align-items: flex-start;
 
-        .transactionTotal {
+        .expenseTotal {
           color: #FD3C4A;
           font-size: 16px;
           font-weight: bold;
           margin-left: auto;
         }
 
-        .transactionDate {
+        .expenseDate {
           color: #91919F;
           font-size: 13px;
           font-weight: bold;
           margin-left: auto;
         }
 
-        .transactionName {
+        .expenseName {
           color: #292B2D;
           font-size: 16px;
           font-weight: bold;
         }
 
-        .transactionDescription {
+        .expenseDescription {
           color: #91919F;
           font-size: 13px;
           font-weight: bold;
@@ -74,7 +74,7 @@
     }
   }
 
-  .transactionsFooter {
+  .expensesFooter {
     margin-top: auto;
   }
 }

@@ -3,7 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import RequireAuth from 'utils/RequireAuth';
 import LoginPage from './pages/LoginPage/LoginPage';
 import EntryPage from './pages/EntryPage/EntryPage';
-import TransactionsOverviewPage from 'pages/TransactionsOverviewPage/TransactionsOverviewPage';
+import ExpensesOverviewPage from 'pages/ExpensesOverviewPage/ExpensesOverviewPage';
 
 const AppRoutes = () => (
   <Routes>
@@ -15,8 +15,8 @@ const AppRoutes = () => (
     <Route exact path="/login" element={<LoginPage/>} />
     <Route
       exact
-      path='/transactions-overview'
-      element={RequireAuth(<TransactionsOverviewPage />)}
+      path='/expenses-overview'
+      element={RequireAuth(<ExpensesOverviewPage />)}
     />
   </Routes>
 );
