@@ -5,7 +5,7 @@ import { UserAuthenticationController } from '../controllers/UserAuthenticationC
 
 const userAuthenticationRoute = Router();
 
-userAuthenticationRoute.post('/register', validateSchema(userSchema), UserAuthenticationController.signup);
+userAuthenticationRoute.post('/register', validateSchema(userSchema), UserAuthenticationController.create);
 userAuthenticationRoute.post('/login', UserAuthenticationController.signin);
 
 export default userAuthenticationRoute;
