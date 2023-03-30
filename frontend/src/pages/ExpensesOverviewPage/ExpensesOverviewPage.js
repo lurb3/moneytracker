@@ -43,7 +43,6 @@ const ExpensesOverviewPage = () => {
   }
 
   useEffect(() => {
-    console.log('UPDATING NORMAL')
     loadData();
   }, []);
 
