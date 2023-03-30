@@ -1,26 +1,29 @@
-import React from 'react';
-import { useForm, Controller } from "react-hook-form";
 import { DatePicker } from 'antd';
+import React from 'react';
+import { Controller, useForm } from "react-hook-form";
+import { useDispatch } from 'react-redux';
+import { actions as expensesActions } from 'store/reducers/expensesReducer';
 import Swal from 'sweetalert2';
 import useAxios from 'utils/axios.interceptors';
 import './expensesForm.scss';
 
-const ExpensesForm = ({ isOpen = false, setIsOpen = () => {}, loadExpenses }) => {
+const ExpensesForm = ({ isOpen = false, setIsOpen = () => {} }) => {
   const api = useAxios();
   const { register, handleSubmit, control, setValue, reset, formState: { errors } } = useForm();
+  const dispatch = useDispatch();
 
   if (!isOpen) return null;
 
   const onSubmit = async (data) => {
     try {
-    await api.post('/api/user_expenses', data);
-    Swal.fire({
-      icon: 'success',
-      title: 'Expense created',
-      showConfirmButton: false,
-      timer: 1500
-    })
-    await loadExpenses();
+      const res = await api.post('/api/user_expenses', data);
+      dispatch(expensesActions.setExpense(res.data));
+      Swal.fire({
+        icon: 'success',
+        title: 'Expense created',
+        showConfirmButton: false,
+        timer: 1500
+      })
     setIsOpen(false);
     reset();
     } catch(e) {

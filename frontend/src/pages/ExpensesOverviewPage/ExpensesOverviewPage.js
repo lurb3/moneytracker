@@ -3,7 +3,8 @@ import { format } from 'date-fns';
 import dayjs from 'dayjs';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { actions as expensesActions } from 'store/reducers/expensesReducer';
+import { actions as expensesActions, selectors as expensesSelector } from 'store/reducers/expensesReducer';
+import { selectors as userSelector } from 'store/reducers/userReducer';
 import Swal from 'sweetalert2';
 import useAxios from 'utils/axios.interceptors';
 import CategoryPlaceholder from '../../assets/category-placeholder.svg';
@@ -13,40 +14,37 @@ const ExpensesOverviewPage = () => {
   const dateFormat = 'DD-MM-YYYY';
   const [ isLoading, setIsLoading ] = useState(false);
   const [ timeInterval, setTimeInterval ] = useState([dayjs(), dayjs()]);
-  const [ userExpenses, setUserExpenses ] = useState([]);
-  const test = useSelector(state => state.expenses)
+  const expenses = useSelector(expensesSelector.getExpenses || []);
   const dispatch = useDispatch();
-  console.log('----', test)
   const apiRef = useRef(useAxios());
   const { RangePicker } = DatePicker;
 
-  // const loadData = async () => {
-  //   setIsLoading(true);
+  const loadData = async () => {
+    setIsLoading(true);
 
-  //   try {
-  //     const expenses = await apiRef.current.get('/api/user_expenses', {
-  //       params: {
-  //         fromDate: dayjs(timeInterval[0], 'DD-MM-YYYY').format(dateFormat),
-  //         toDate: dayjs(timeInterval[1], 'DD-MM-YYYY').format(dateFormat)
-  //       }
-  //     });
-  //     setUserExpenses(expenses.data);
-  //     setIsLoading(false);
-  //   } catch (e) {
-  //     Swal.fire({
-  //       title: 'Failed to load expenses',
-  //       text: e.message ?? 'Unknown error',
-  //       icon: 'error',
-  //       confirmButtonText: 'Close',
-  //     })
-  //     setIsLoading(false);
-  //   }
-  // }
+    try {
+      const expenses = await apiRef.current.get('/api/user_expenses', {
+        params: {
+          fromDate: dayjs(timeInterval[0], 'DD-MM-YYYY').format(dateFormat),
+          toDate: dayjs(timeInterval[1], 'DD-MM-YYYY').format(dateFormat)
+        }
+      });
+      dispatch(expensesActions.loadExpenses(expenses.data));
+      setIsLoading(false);
+    } catch (e) {
+      Swal.fire({
+        title: 'Failed to load expenses',
+        text: e.message ?? 'Unknown error',
+        icon: 'error',
+        confirmButtonText: 'Close',
+      })
+      setIsLoading(false);
+    }
+  }
 
   useEffect(() => {
-    const res = dispatch(expensesActions.loadExpenses());
-    console.log('0---', res)
-    //loadData();
+    console.log('UPDATING NORMAL')
+    loadData();
   }, []);
 
   return (
@@ -62,14 +60,14 @@ const ExpensesOverviewPage = () => {
               onChange={(e, value) => setTimeInterval(value)}
             />
           </div>
-          <Button type="primary" size='large' onClick={() => {}} loading={isLoading}>
+          <Button type="primary" size='large' onClick={loadData} loading={isLoading}>
             Load expenses
           </Button>
         </div>
 
         <div className='expensesContent'>
           {
-            userExpenses.map((expense) => (
+            expenses.map((expense) => (
               <div className='expensesCard' key={expense._id}>
                 <img className='categoryImage' src={CategoryPlaceholder} alt='Category placeholder'/>
                 <div className='cardContent'>

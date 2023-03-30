@@ -2,20 +2,19 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const expensesSlice = createSlice({
   name: 'expenses',
-  initialState: {
-    username: '',
-    email: '',
-    _id: ''
-  },
+  initialState: [],
   reducers: {
     loadExpenses: (state, { payload }) => {
-      console.log('Load me please')
+      return [...payload]
+    },
+    setExpense: (state, { payload }) => {
+      return [...state, payload];
     },
   },
 });
 
 export const selectors = {
-  getUsername: (state) => state.user
+  getExpenses: (state) => state.expenses
 }
 
 export const { actions, reducer } = expensesSlice;
