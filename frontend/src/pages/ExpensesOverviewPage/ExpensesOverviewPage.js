@@ -1,55 +1,56 @@
-import React, { useEffect, useState, useRef } from 'react';
-import Swal from 'sweetalert2';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { Button, DatePicker } from 'antd';
 import { format } from 'date-fns';
 import dayjs from 'dayjs';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { actions as expensesActions } from 'store/reducers/expensesReducer';
+import Swal from 'sweetalert2';
 import useAxios from 'utils/axios.interceptors';
-import ExpensesForm from './ExpensesForm';
 import CategoryPlaceholder from '../../assets/category-placeholder.svg';
 import './expensesOverview.scss';
 
 const ExpensesOverviewPage = () => {
   const dateFormat = 'DD-MM-YYYY';
   const [ isLoading, setIsLoading ] = useState(false);
-  const [ openForm, setOpenForm ] = useState(false);
   const [ timeInterval, setTimeInterval ] = useState([dayjs(), dayjs()]);
   const [ userExpenses, setUserExpenses ] = useState([]);
-
+  const test = useSelector(state => state.expenses)
+  const dispatch = useDispatch();
+  console.log('----', test)
   const apiRef = useRef(useAxios());
   const { RangePicker } = DatePicker;
 
-  const loadData = async () => {
-    setIsLoading(true);
+  // const loadData = async () => {
+  //   setIsLoading(true);
 
-    try {
-      const expenses = await apiRef.current.get('/api/user_expenses', {
-        params: {
-          fromDate: dayjs(timeInterval[0], 'DD-MM-YYYY').format(dateFormat),
-          toDate: dayjs(timeInterval[1], 'DD-MM-YYYY').format(dateFormat)
-        }
-      });
-      setUserExpenses(expenses.data);
-      setIsLoading(false);
-    } catch (e) {
-      Swal.fire({
-        title: 'Failed to load expenses',
-        text: e.message ?? 'Unknown error',
-        icon: 'error',
-        confirmButtonText: 'Close',
-      })
-      setIsLoading(false);
-    }
-  }
+  //   try {
+  //     const expenses = await apiRef.current.get('/api/user_expenses', {
+  //       params: {
+  //         fromDate: dayjs(timeInterval[0], 'DD-MM-YYYY').format(dateFormat),
+  //         toDate: dayjs(timeInterval[1], 'DD-MM-YYYY').format(dateFormat)
+  //       }
+  //     });
+  //     setUserExpenses(expenses.data);
+  //     setIsLoading(false);
+  //   } catch (e) {
+  //     Swal.fire({
+  //       title: 'Failed to load expenses',
+  //       text: e.message ?? 'Unknown error',
+  //       icon: 'error',
+  //       confirmButtonText: 'Close',
+  //     })
+  //     setIsLoading(false);
+  //   }
+  // }
 
   useEffect(() => {
-    loadData();
+    const res = dispatch(expensesActions.loadExpenses());
+    console.log('0---', res)
+    //loadData();
   }, []);
 
   return (
     <div className='pageWrapper'>
-      <ExpensesForm isOpen={openForm} setIsOpen={setOpenForm} loadExpenses={loadData} />
       <h1>Expenses Overview</h1>
       <div className='expensesWrapper'>
         <div className='expensesHeader'>
@@ -61,7 +62,7 @@ const ExpensesOverviewPage = () => {
               onChange={(e, value) => setTimeInterval(value)}
             />
           </div>
-          <Button type="primary" size='large' onClick={loadData} loading={isLoading}>
+          <Button type="primary" size='large' onClick={() => {}} loading={isLoading}>
             Load expenses
           </Button>
         </div>
@@ -82,9 +83,6 @@ const ExpensesOverviewPage = () => {
               </div>
             ))
           }
-        </div>
-        <div className='expensesFooter'>
-          <FontAwesomeIcon onClick={() => setOpenForm(true)} icon={faCirclePlus} size='3x' color='#00b96b'/>
         </div>
       </div>
     </div>
