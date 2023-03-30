@@ -1,8 +1,8 @@
 .expensesWrapper {
   display: flex;
   flex-direction: column;
-  padding-bottom: 20px;
-  min-height: 100vh;
+  padding: 20px;
+  max-height: 100%;
   .expensesHeader {
     margin-top: 20px;
   }
@@ -23,6 +23,10 @@
   .expensesContent {
     width: 100%;
     margin-top: 20px;
+    overflow-y: scroll;
+    &::-webkit-scrollbar{
+      display: none;
+    }
 
     .expensesCard {
       display: flex;
@@ -75,6 +79,5 @@
   }
 
   .expensesFooter {
-    margin-top: auto;
   }
 }

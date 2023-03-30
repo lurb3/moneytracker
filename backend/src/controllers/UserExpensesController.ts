@@ -1,8 +1,8 @@
+import { parse } from 'date-fns';
 import express from 'express';
-import { parse } from 'date-fns'
-import { UserExpenses } from '../models/userExpenses';
-import { AuthenticatedRequest } from '../interfaces/AuthenticatedRequest.interface';
 import mongoose from 'mongoose';
+import { AuthenticatedRequest } from '../interfaces/AuthenticatedRequest.interface';
+import { UserExpenses } from '../models/userExpenses';
 
 interface ExpenseQuery {
   fromDate?: string | Date,

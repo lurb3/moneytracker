@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from "react-hook-form";
-import { useNavigate, Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import useAxios from 'utils/axios.interceptors';
 import './login.scss';
 
@@ -20,7 +20,14 @@ const LoginPage = () => {
     }
   }
 
-  if (token) return <Navigate to='/expenses-overview' replace />;
+  useEffect(() => {
+    console.log('--', token)
+    if(token) {
+      navigate('/expenses-overview')
+    }
+  }, [navigate, token])
+
+  //if (token) return <Navigate to='/expenses-overview' replace />;
 
   return (
     <div className='pageWrapper loginPageWrapper'>

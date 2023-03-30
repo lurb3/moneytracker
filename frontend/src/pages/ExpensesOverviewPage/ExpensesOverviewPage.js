@@ -1,22 +1,21 @@
-import React, { useEffect, useState, useRef } from 'react';
-import Swal from 'sweetalert2';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { Button, DatePicker } from 'antd';
 import { format } from 'date-fns';
 import dayjs from 'dayjs';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { actions as expensesActions, selectors as expensesSelector } from 'store/reducers/expensesReducer';
+import { selectors as userSelector } from 'store/reducers/userReducer';
+import Swal from 'sweetalert2';
 import useAxios from 'utils/axios.interceptors';
-import ExpensesForm from './ExpensesForm';
 import CategoryPlaceholder from '../../assets/category-placeholder.svg';
 import './expensesOverview.scss';
 
 const ExpensesOverviewPage = () => {
   const dateFormat = 'DD-MM-YYYY';
   const [ isLoading, setIsLoading ] = useState(false);
-  const [ openForm, setOpenForm ] = useState(false);
   const [ timeInterval, setTimeInterval ] = useState([dayjs(), dayjs()]);
-  const [ userExpenses, setUserExpenses ] = useState([]);
-
+  const expenses = useSelector(expensesSelector.getExpenses || []);
+  const dispatch = useDispatch();
   const apiRef = useRef(useAxios());
   const { RangePicker } = DatePicker;
 
@@ -30,7 +29,7 @@ const ExpensesOverviewPage = () => {
           toDate: dayjs(timeInterval[1], 'DD-MM-YYYY').format(dateFormat)
         }
       });
-      setUserExpenses(expenses.data);
+      dispatch(expensesActions.loadExpenses(expenses.data));
       setIsLoading(false);
     } catch (e) {
       Swal.fire({
@@ -49,7 +48,6 @@ const ExpensesOverviewPage = () => {
 
   return (
     <div className='pageWrapper'>
-      <ExpensesForm isOpen={openForm} setIsOpen={setOpenForm} loadExpenses={loadData} />
       <h1>Expenses Overview</h1>
       <div className='expensesWrapper'>
         <div className='expensesHeader'>
@@ -68,7 +66,7 @@ const ExpensesOverviewPage = () => {
 
         <div className='expensesContent'>
           {
-            userExpenses.map((expense) => (
+            expenses.map((expense) => (
               <div className='expensesCard' key={expense._id}>
                 <img className='categoryImage' src={CategoryPlaceholder} alt='Category placeholder'/>
                 <div className='cardContent'>
@@ -82,9 +80,6 @@ const ExpensesOverviewPage = () => {
               </div>
             ))
           }
-        </div>
-        <div className='expensesFooter'>
-          <FontAwesomeIcon onClick={() => setOpenForm(true)} icon={faCirclePlus} size='3x' color='#00b96b'/>
         </div>
       </div>
     </div>

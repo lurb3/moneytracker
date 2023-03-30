@@ -1,7 +1,7 @@
 import React from 'react';
-import Swal from 'sweetalert2';
 import { useForm } from "react-hook-form";
-import { useNavigate, Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import useAxios from 'utils/axios.interceptors';
 import './signup.scss';
 
@@ -15,7 +15,7 @@ const SignupPage = () => {
     e.preventDefault();
     try {
       const user = await api.post('/api/register', data);
-      console.log('---------', user)
+
       if (user.data) {
         localStorage.setItem('token', user.data.token);
         Swal.fire({
@@ -28,7 +28,6 @@ const SignupPage = () => {
         });
       }
     } catch(e) {
-      console.log(e)
       Swal.fire({
         title: 'Failed to create user',
         text: e?.response?.data?.message ?? 'Could not create user, please check all fields are correct.',
