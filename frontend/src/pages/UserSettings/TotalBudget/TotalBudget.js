@@ -12,7 +12,6 @@ const TotalBudget = () => {
   const user = useSelector(userSelector.getUsername || {});
   const userSettings = useSelector(userSelector.getSettings || []);
   const { register, handleSubmit, control, setValue, reset, formState: { errors } } = useForm();
-  console.log(userSettings)
   const onSubmit = async (data) => {
     try {
       const res = await api.post(`/api/user_settings/${user._id}`, data);
