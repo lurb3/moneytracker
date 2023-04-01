@@ -1,14 +1,15 @@
-import { DownOutlined } from '@ant-design/icons';
 import { faCirclePlus, faGear, faHouse } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Dropdown, Space } from 'antd';
+import { Dropdown } from 'antd';
 import ExpensesForm from 'pages/ExpensesOverviewPage/ExpensesForm';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useAuth from 'utils/auth';
 import './navigation.scss';
 
 const Navigation = () => {
   const [ openForm, setOpenForm ] = useState(false);
+  const auth = useAuth();
   const navigate = useNavigate();
 
   const items = [
@@ -22,7 +23,7 @@ const Navigation = () => {
     },
     {
       label: 'Logout',
-      onClick: () => {},
+      onClick: auth.logout,
       key: '3',
     },
   ];

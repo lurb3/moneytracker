@@ -6,7 +6,7 @@ import 'styles/Form.scss';
 import Swal from 'sweetalert2';
 import useAxios from 'utils/axios.interceptors';
 
-const TotalBudget = () => {
+const TotalBudget = ({ callback }) => {
   const api = useAxios();
   const dispatch = useDispatch();
   const user = useSelector(userSelector.getUsername || {});
@@ -18,14 +18,16 @@ const TotalBudget = () => {
       dispatch(userActions.setSetting(res.data));
       Swal.fire({
         icon: 'success',
-        title: 'Expense created',
+        title: 'Total budget updated',
         showConfirmButton: false,
         timer: 1500
+      }).then(() => {
+        callback();
       })
     reset();
     } catch(e) {
       Swal.fire({
-        title: 'Failed to create expense',
+        title: 'Failed to update total budget',
         text: e.message ?? 'Unknown error',
         icon: 'error',
         confirmButtonText: 'Close',

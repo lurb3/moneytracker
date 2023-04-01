@@ -39,7 +39,7 @@ const UserSettings = () => {
         </div>
       ))
     ),
-    totalBudget: <TotalBudget />,
+    totalBudget: <TotalBudget callback={() => setRenderComponent('default')} />,
     currency: <Currency />
   }
   const [ renderComponent, setRenderComponent ] = useState('default');
