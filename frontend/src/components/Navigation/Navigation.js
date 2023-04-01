@@ -31,7 +31,7 @@ const Navigation = () => {
     <>
       <ExpensesForm isOpen={openForm} setIsOpen={setOpenForm} loadExpenses={() => {}} />
       <div className='bottomNavigation'>
-        <FontAwesomeIcon icon={faHouse} size='2x' color='#4a4a4a'/>
+        <FontAwesomeIcon icon={faHouse} size='2x' color='#4a4a4a' onClick={() => navigate('/expenses-overview')}/>
         <FontAwesomeIcon onClick={() => setOpenForm(true)} icon={faCirclePlus} size='3x' color='#00b96b'/>
         <Dropdown
           menu={{
@@ -39,8 +39,7 @@ const Navigation = () => {
           }}
           trigger={['click']}
         >
-          
-        <FontAwesomeIcon icon={faGear} size='2x' color='#4a4a4a'/>
+          <FontAwesomeIcon icon={faGear} size='2x' color='#4a4a4a'/>
         </Dropdown>
       </div>
     </>

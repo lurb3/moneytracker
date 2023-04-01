@@ -9,7 +9,6 @@ import './userSettings.scss';
 
 const UserSettings = () => {
   const userSettings = useSelector(userSelectors.getSettings);
-  console.log(userSettings)
   const settings = [
     {
       title: 'Currency',

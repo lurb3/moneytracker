@@ -10,8 +10,9 @@ const TotalBudget = () => {
   const api = useAxios();
   const dispatch = useDispatch();
   const user = useSelector(userSelector.getUsername || {});
+  const userSettings = useSelector(userSelector.getSettings || []);
   const { register, handleSubmit, control, setValue, reset, formState: { errors } } = useForm();
-
+  console.log(userSettings)
   const onSubmit = async (data) => {
     try {
       const res = await api.post(`/api/user_settings/${user._id}`, data);
@@ -24,7 +25,6 @@ const TotalBudget = () => {
       })
     reset();
     } catch(e) {
-      console.log(e)
       Swal.fire({
         title: 'Failed to create expense',
         text: e.message ?? 'Unknown error',
@@ -36,7 +36,7 @@ const TotalBudget = () => {
   return (
     <form className='formWrapper' onSubmit={handleSubmit(onSubmit)}>
       <h3>Total Budget</h3>
-      <input className='inputField' type='number' placeholder='Total budget' name='totalBudget' {...register("totalBudget")} />
+      <input className='inputField' defaultValue={userSettings?.totalBudget || 0} type='number' placeholder='Total budget' name='totalBudget' {...register("totalBudget")} />
       <input className='primaryButton' type='submit' value='Save' />
     </form>
   );
