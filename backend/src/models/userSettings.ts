@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
 const userSettingsSchema = new mongoose.Schema({
-  totalBudget: { type: Number, required: true },
+  totalBudget: { type: Number, default: 0 },
+  currency: { type: String, default: 'EUR' },
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 });
 

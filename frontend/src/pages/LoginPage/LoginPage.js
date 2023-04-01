@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useForm } from "react-hook-form";
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useAxios from 'utils/axios.interceptors';
 import './login.scss';
 
@@ -21,7 +21,6 @@ const LoginPage = () => {
   }
 
   useEffect(() => {
-    console.log('--', token)
     if(token) {
       navigate('/expenses-overview')
     }

@@ -1,10 +1,11 @@
-import { BrowserRouter as Router } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
+import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
-import store from './store/store';
-import AppRoutes from './routes';
-import 'semantic-ui-css/semantic.min.css'
+import { BrowserRouter as Router } from 'react-router-dom';
+import 'semantic-ui-css/semantic.min.css';
 import './App.scss';
+import AppRoutes from './routes';
+import store from './store/store';
 
 function App() {
   const providerTheme = {

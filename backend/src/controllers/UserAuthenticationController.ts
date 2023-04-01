@@ -1,7 +1,10 @@
+import bcrypt from 'bcryptjs';
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
+import mongoose from 'mongoose';
+import { AuthenticatedRequest } from '../interfaces/AuthenticatedRequest.interface';
 import { User } from '../models/user';
+import { UserSettings } from '../models/userSettings';
 
 export class UserAuthenticationController {
   public static async create (req: express.Request, res: express.Response): Promise<void>
@@ -67,5 +70,20 @@ export class UserAuthenticationController {
     } catch (err) {
       console.log(err);
     }
+  }
+
+  public static async getMe (req: AuthenticatedRequest<express.Request>, res: express.Response): Promise<void>
+  {
+    const userId = req.user._id;
+
+    const user = await User.findById(userId);
+    const userSettings = await UserSettings.findOne({user: userId});
+
+    user.password = null;
+
+    res.status(200).json({
+      user,
+      settings: userSettings
+    })
   }
 }

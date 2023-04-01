@@ -12,7 +12,7 @@ const useAxios = () => {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
   });
-  
+
   request.interceptors.response.use(
     (response) => {
       // Add your response interceptors here
@@ -20,7 +20,7 @@ const useAxios = () => {
     },
     (error) => {
       // Example: handle unauthorized errors
-      if (error.response.status === 403) {
+      if (error.response.status === 401 || error.response.status === 403) {
         localStorage.removeItem("token");
         navigate("/login");
       }

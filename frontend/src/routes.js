@@ -1,6 +1,7 @@
 import Navigation from 'components/Navigation/Navigation';
 import ExpensesOverviewPage from 'pages/ExpensesOverviewPage/ExpensesOverviewPage';
 import SignupPage from 'pages/SignupPage/SignupPage';
+import UserSettings from 'pages/UserSettings/UserSettings';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import RequireAuth from 'utils/RequireAuth';
@@ -21,6 +22,15 @@ const AppRoutes = () => (
             <Navigation />
           </RequireAuth>
         }
+      />
+      <Route
+       path='/user-settings'
+       element={
+        <RequireAuth>
+          <UserSettings />
+          <Navigation />
+        </RequireAuth>
+       }
       />
     </Routes>
   </>
