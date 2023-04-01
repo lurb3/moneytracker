@@ -21,7 +21,6 @@ const LoginPage = () => {
   }
 
   useEffect(() => {
-    console.log('--', token)
     if(token) {
       navigate('/expenses-overview')
     }

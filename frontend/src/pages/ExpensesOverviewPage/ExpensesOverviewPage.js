@@ -4,7 +4,6 @@ import dayjs from 'dayjs';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { actions as expensesActions, selectors as expensesSelector } from 'store/reducers/expensesReducer';
-import { selectors as userSelector } from 'store/reducers/userReducer';
 import Swal from 'sweetalert2';
 import useAxios from 'utils/axios.interceptors';
 import CategoryPlaceholder from '../../assets/category-placeholder.svg';

@@ -1,7 +1,7 @@
 import express from 'express';
 import { AuthenticatedRequest } from '../interfaces/AuthenticatedRequest.interface';
-import { UserSettings } from '../models/userSettings';
 import { User } from '../models/user';
+import { UserSettings } from '../models/userSettings';
 
 export class UserSettingsController {
   public static async update (req: AuthenticatedRequest<express.Request>, res: express.Response): Promise<void>
