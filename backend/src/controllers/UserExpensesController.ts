@@ -3,6 +3,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import { AuthenticatedRequest } from '../interfaces/AuthenticatedRequest.interface';
 import { UserExpenses } from '../models/userExpenses';
+import { UserSettings } from '../models/userSettings';
 
 interface ExpenseQuery {
   fromDate?: string | Date,
@@ -51,7 +52,14 @@ export class UserExpensesController {
 
     date = parse(date, 'dd-MM-yyyy', new Date());
 
-    const expense = new UserExpenses({ name, total, date, description, category, user: req.user._id });
+    const userId = req.user._id;
+    const expense = new UserExpenses({ name, total, date, description, category, user: userId });
+    const userSettings = await UserSettings.findOne({ user: userId });
+
+    if (userSettings.updateTotalBudget) {
+      userSettings.totalBudget = parseFloat(userSettings.totalBudget) - parseFloat(expense.total);
+      userSettings.save();
+    }
 
     try {
       await expense.save();

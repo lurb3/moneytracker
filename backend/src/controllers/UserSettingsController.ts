@@ -17,7 +17,7 @@ export class UserSettingsController {
     try {
       const userId = new mongoose.Types.ObjectId(req.user._id);
 
-      let settings = await UserSettings.findOneAndUpdate({user: req.user._id}, update, options);
+      let settings = await UserSettings.findOneAndUpdate({user: userId}, update, options);
       res.status(201).json(settings);
     } catch (error) {
       console.log(error)
