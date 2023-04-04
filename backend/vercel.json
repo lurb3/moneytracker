@@ -1,7 +1,8 @@
 {
-  "version": 2,
-  "name": "moneytracker-be",
+  "builds": [
+    { "src": "index.ts", "use": "@vercel/node" }
+  ],
   "routes": [
-     { "src": "/(.*)", "dest": "build/index.js" }
+    { "src": "/.*", "dest": "/index.ts" }
   ]
 }
