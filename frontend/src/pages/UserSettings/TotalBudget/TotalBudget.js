@@ -9,13 +9,13 @@ import useAxios from 'utils/axios.interceptors';
 const TotalBudget = ({ callback }) => {
   const api = useAxios();
   const dispatch = useDispatch();
-  const user = useSelector(userSelector.getUsername || {});
-  const userSettings = useSelector(userSelector.getSettings || []);
+  const user = useSelector(userSelector.getUser || {});
   const { register, handleSubmit, control, setValue, reset, formState: { errors } } = useForm();
   const onSubmit = async (data) => {
     try {
-      const res = await api.post(`/api/user_settings/${user._id}`, data);
-      dispatch(userActions.setSetting(res.data));
+      console.log(user._id);
+      const res = await api.put(`/api/user/${user._id}`, data);
+      dispatch(userActions.setUser(res.data));
       Swal.fire({
         icon: 'success',
         title: 'Total budget updated',
@@ -37,7 +37,7 @@ const TotalBudget = ({ callback }) => {
   return (
     <form className='formWrapper' onSubmit={handleSubmit(onSubmit)}>
       <h3>Total Budget</h3>
-      <input className='inputField' defaultValue={userSettings?.totalBudget || 0} type='number' placeholder='Total budget' name='totalBudget' {...register("totalBudget")} />
+      <input className='inputField' defaultValue={user?.totalBudget || 0} type='number' placeholder='Total budget' name='totalBudget' {...register("totalBudget")} />
       <input className='primaryButton' type='submit' value='Save' />
     </form>
   );

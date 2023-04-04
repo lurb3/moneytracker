@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import { AuthenticatedRequest } from '../interfaces/AuthenticatedRequest.interface';
 import { User } from '../models/user';
 
@@ -39,6 +40,27 @@ export class UserController {
     catch (err: unknown) {
       console.error(err);
       res.status(500).json({ message: 'Server error' });
+    }
+  }
+
+  public static async update (req: AuthenticatedRequest<express.Request>, res: express.Response): Promise<void>
+  {
+    const { totalBudget } = req.body;
+    const update = { totalBudget };
+    const options = {
+      new: true, // return the modified document
+    };
+
+    try {
+      const userId = new mongoose.Types.ObjectId(req.user._id);
+
+      const user = await User.findByIdAndUpdate(userId, update, options);
+
+      user.password = null;
+      res.status(201).json(user);
+    } catch (error) {
+      console.log(error)
+      res.status(500).send(error);
     }
   }
 }

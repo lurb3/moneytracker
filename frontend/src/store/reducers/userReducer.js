@@ -5,6 +5,7 @@ const userSlice = createSlice({
   initialState: {
     username: '',
     email: '',
+    totalBudget: 0,
     _id: '',
     settings: {}
   },
@@ -12,6 +13,7 @@ const userSlice = createSlice({
     setUser: (state, { payload }) => {
       state.username = payload.username;
       state.email = payload.email;
+      state.totalBudget = payload.totalBudget;
       state._id = payload._id;
     },
     setSetting: (state, { payload }) => {
@@ -24,7 +26,7 @@ const userSlice = createSlice({
 });
 
 export const selectors = {
-  getUsername: (state) => state.user,
+  getUser: (state) => state.user,
   getSettings: (state) => state.user.settings
 }
 

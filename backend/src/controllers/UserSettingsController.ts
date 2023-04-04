@@ -7,8 +7,8 @@ import { UserSettings } from '../models/userSettings';
 export class UserSettingsController {
   public static async update (req: AuthenticatedRequest<express.Request>, res: express.Response): Promise<void>
   {
-    const { totalBudget } = req.body;
-    const update = { totalBudget };
+    const { updateTotalBudget, currency } = req.body;
+    const update = { updateTotalBudget, currency };
     const options = {
       new: true, // return the modified document
       upsert: true, // create a new document if none exists
