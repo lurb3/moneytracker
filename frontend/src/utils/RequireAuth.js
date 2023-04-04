@@ -26,9 +26,6 @@ const RequireAuth = ({ children }) => {
   
   if (!token) return <Navigate to='/login' replace />
 
-  const decodedToken = jwt_decode(token);
-  dispatch(userActions.setUser(decodedToken));
-
   return children;
 }
 export default RequireAuth;

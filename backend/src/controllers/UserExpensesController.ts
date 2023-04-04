@@ -2,7 +2,9 @@ import { parse } from 'date-fns';
 import express from 'express';
 import mongoose from 'mongoose';
 import { AuthenticatedRequest } from '../interfaces/AuthenticatedRequest.interface';
+import { User } from '../models/user';
 import { UserExpenses } from '../models/userExpenses';
+import { UserSettings } from '../models/userSettings';
 
 interface ExpenseQuery {
   fromDate?: string | Date,
@@ -51,11 +53,19 @@ export class UserExpensesController {
 
     date = parse(date, 'dd-MM-yyyy', new Date());
 
-    const expense = new UserExpenses({ name, total, date, description, category, user: req.user._id });
+    const userId = req.user._id;
+    const expense = new UserExpenses({ name, total, date, description, category, user: userId });
+    const userSettings = await UserSettings.findOne({ user: userId });
+    const user = await User.findById(userId);
+
+    if (userSettings.updateTotalBudget) {
+      user.totalBudget = user.totalBudget - parseFloat(expense.total);
+      user.save();
+    }
 
     try {
       await expense.save();
-      res.status(201).json(expense);
+      res.status(201).json({ expense, user });
     } catch (error) {
       console.log(error)
       res.status(400).send(error);

@@ -2,13 +2,13 @@ import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { selectors as userSelectors } from 'store/reducers/userReducer';
+import { selectors as userSelector } from 'store/reducers/userReducer';
 import Currency from './Currency/Currency';
 import TotalBudget from './TotalBudget/TotalBudget';
 import './userSettings.scss';
 
 const UserSettings = () => {
-  const userSettings = useSelector(userSelectors.getSettings);
+  const user = useSelector(userSelector.getUser || {});
   const settings = [
     {
       title: 'Currency',
@@ -23,7 +23,7 @@ const UserSettings = () => {
       title: 'Total Budget',
       content: (
         <>
-          {userSettings?.totalBudget || 0} € <FontAwesomeIcon className='settingItemIcon' icon={faAngleRight} />
+          {user?.totalBudget || 0} € <FontAwesomeIcon className='settingItemIcon' icon={faAngleRight} />
         </>
       ),
       onClick: () => setRenderComponent('totalBudget')

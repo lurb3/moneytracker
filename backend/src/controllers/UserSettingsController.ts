@@ -7,8 +7,8 @@ import { UserSettings } from '../models/userSettings';
 export class UserSettingsController {
   public static async update (req: AuthenticatedRequest<express.Request>, res: express.Response): Promise<void>
   {
-    const { totalBudget } = req.body;
-    const update = { totalBudget };
+    const { updateTotalBudget, currency } = req.body;
+    const update = { updateTotalBudget, currency };
     const options = {
       new: true, // return the modified document
       upsert: true, // create a new document if none exists
@@ -17,7 +17,7 @@ export class UserSettingsController {
     try {
       const userId = new mongoose.Types.ObjectId(req.user._id);
 
-      let settings = await UserSettings.findOneAndUpdate({user: req.user._id}, update, options);
+      let settings = await UserSettings.findOneAndUpdate({user: userId}, update, options);
       res.status(201).json(settings);
     } catch (error) {
       console.log(error)

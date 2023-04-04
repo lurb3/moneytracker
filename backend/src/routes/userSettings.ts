@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { UserSettingsController } from '../controllers/UserSettingsController';
-import verifyToken from '../middleware/authentication'; 
+import verifyToken from '../middleware/authentication';
 
 const userSettingsRoute = Router();
 
