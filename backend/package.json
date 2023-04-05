@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --require ts-node/register tests/**/*.test.ts",
-    "start": "node build/index.js",
-    "build": "npm install && tsc"
+    "start": "node ./build/index.js",
+    "build": "tsc"
   },
   "author": "gustavo",
   "license": "ISC",
