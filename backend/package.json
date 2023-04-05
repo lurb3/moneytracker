@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --require ts-node/register tests/**/*.test.ts",
-    "start": "node /opt/render/project/src/backend/build/index.js",
+    "start": "npm run build && node --experimental-modules dist/index.js",
     "build": "tsc"
   },
   "author": "gustavo",
