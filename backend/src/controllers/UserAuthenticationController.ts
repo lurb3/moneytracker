@@ -26,7 +26,7 @@ export class UserAuthenticationController {
         expiresIn: "2h",
       }
     );
-    const userSettings = new UserSettings(user);
+    const userSettings = new UserSettings({user});
 
     user.token = token;
 
