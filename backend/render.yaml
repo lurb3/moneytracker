@@ -1,5 +1,0 @@
-name: expensetracker
-buildCommand: npm run build
-startCommand: node ./build/index.js
-env:
-  NODE_VERSION: 16
