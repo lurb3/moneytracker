@@ -26,10 +26,13 @@ export class UserAuthenticationController {
         expiresIn: "2h",
       }
     );
+    const userSettings = new UserSettings(user);
 
     user.token = token;
 
+
     try {
+      await userSettings.save();
       await user.save();
       res.status(201).json(Object.assign({}, user.toObject(), { password: undefined }));
       return;
