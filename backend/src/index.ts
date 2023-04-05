@@ -1,11 +1,12 @@
-import express from 'express';
-import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import routes from './routes';
 import dotenv from 'dotenv';
+import express from 'express';
+import mongoose from 'mongoose';
+import routes from './routes';
 dotenv.config();
 
+const port = parseInt(process.env.PORT, 10) || 3100;
 const app = express();
 mongoose.set('strictQuery', true);
 
@@ -27,8 +28,8 @@ app.use('/api', [
 ]);
 
 // Start the server
-app.listen(3100, () => {
-  console.log('Server started on http://localhost:3100');
+app.listen(port, () => {
+  console.log('Server started on port: ' + port);
 });
 
 export default app;
