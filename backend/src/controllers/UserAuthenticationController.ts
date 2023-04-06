@@ -10,15 +10,17 @@ export class UserAuthenticationController {
   public static async create (req: express.Request, res: express.Response): Promise<void>
   {
     const { username, email, password } = req.body;
-    
-    const duplicateUser = await User.findOne({ email });
+    const duplicateUser = await User.findOne({$or: [
+      { email },
+      { username }
+    ]});
 
     if (duplicateUser) {
       res.status(400).json({message: "Email already in use"});
       return;
     }
 
-    const user = new User({ username, email, password });
+    const user = new User({ username: username.toLowerCase(), email: email.toLowerCase(), password });
     const token = jwt.sign(
       { _id: user._id, email, username },
       process.env.TOKEN_KEY || '',
@@ -51,7 +53,7 @@ export class UserAuthenticationController {
         return;
       }
 
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ email: email.toLowerCase() });
 
       if (user && (await bcrypt.compare(password, user.password))) {
         const token = jwt.sign(
