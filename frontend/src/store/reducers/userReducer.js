@@ -16,6 +16,9 @@ const userSlice = createSlice({
       state.totalBudget = payload.totalBudget;
       state._id = payload._id;
     },
+    setUserBudget: (state, { payload }) => {
+      state.totalBudget = payload.totalBudget;
+    },
     setSetting: (state, { payload }) => {
       state.settings = payload;
     },

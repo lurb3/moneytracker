@@ -7,9 +7,6 @@ const expensesSlice = createSlice({
     loadExpenses: (state, { payload }) => {
       return [...payload]
     },
-    setExpense: (state, { payload }) => {
-      return [...state, payload];
-    },
   },
 });
 
