@@ -1,8 +1,12 @@
 # Money Tracker
 Application to track expenses throught the years. Ability to generate custom reports with filters and date intervals.
+
 Add your current budget and watch it closely as you add expenses.
+
 Set goals to achieve and see how well you are doing and win achievements if you complete them. (WIP)
+
 Set time trackers and value per time, generate reports for these time trackers. (WIP)
+
 Schedule recurring expenses (WIP)
 
 # Getting Started
@@ -22,10 +26,12 @@ TODO
 
 # Deployment
 Push changes to master and the deploy will be launched automatically
+
 Avoid pushing directly to master (this will be prohibited in future versions)
 
 # Built With
 React
+
 Node.js
 
 # Contributing
