@@ -17,14 +17,13 @@ const SignupPage = () => {
       const user = await api.post('/api/register', data);
 
       if (user.data) {
-        localStorage.setItem('token', user.data.token);
         Swal.fire({
           icon: 'success',
           title: 'User created',
           showConfirmButton: false,
           timer: 1500
         }).then(() => {
-          navigate('/expenses-overview');
+          navigate('/login');
         });
       }
     } catch(e) {
