@@ -2,7 +2,6 @@ import { DatePicker } from 'antd';
 import React from 'react';
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch } from 'react-redux';
-import { actions as expensesActions } from 'store/reducers/expensesReducer';
 import { actions as userActions } from 'store/reducers/userReducer';
 import Swal from 'sweetalert2';
 import useAxios from 'utils/axios.interceptors';
@@ -18,8 +17,7 @@ const ExpensesForm = ({ isOpen = false, setIsOpen = () => {} }) => {
   const onSubmit = async (data) => {
     try {
       const res = await api.post('/api/user_expenses', data);
-      dispatch(expensesActions.setExpense(res.data.expense));
-      dispatch(userActions.setUser(res.data.user));
+      dispatch(userActions.setUserBudget({totalBudget: res?.data?.user?.totalBudget}));
 
       Swal.fire({
         icon: 'success',

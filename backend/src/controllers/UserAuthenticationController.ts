@@ -16,7 +16,7 @@ export class UserAuthenticationController {
     ]});
 
     if (duplicateUser) {
-      res.status(400).json({message: "Email already in use"});
+      res.status(400).json({message: "Account already exists"});
       return;
     }
 
