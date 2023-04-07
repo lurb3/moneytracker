@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha --require ts-node/register tests/**/*.test.ts",
     "start": "node --experimental-modules build/index.js",
-    "start-dev": "nodemon ./src/index.ts",
+    "dev": "nodemon ./src/index.ts",
     "build": "npm install && tsc"
   },
   "author": "gustavo",

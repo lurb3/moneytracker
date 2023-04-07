@@ -9,7 +9,7 @@ import { UserSettings } from '../models/userSettings';
 export class UserAuthenticationController {
   public static async create (req: express.Request, res: express.Response): Promise<void>
   {
-    const { username, totalBudget, email, password } = req.body;
+    const { username, totalBudget = 0, email, password } = req.body;
     const duplicateUser = await User.findOne({$or: [
       { email },
       { username }
