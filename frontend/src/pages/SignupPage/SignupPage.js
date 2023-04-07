@@ -44,6 +44,7 @@ const SignupPage = () => {
       <h1>Login</h1>
       <form className='signupForm' onSubmit={handleSubmit(onSubmit)}>
         <input className='inputField' type='text' placeholder='Username' name='username' {...register("username")} />
+        <input className='inputField' type='number' placeholder='Total Budget' name='totalBudget' {...register("totalBudget")} />
         <input className='inputField' type='text' placeholder='Email' name='email' {...register("email")} />
         <input className='inputField' type='password' placeholder='Password' name='password' {...register("password")} />
         <input className='primaryButton' type='submit' value='create' />

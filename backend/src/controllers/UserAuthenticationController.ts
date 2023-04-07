@@ -9,7 +9,7 @@ import { UserSettings } from '../models/userSettings';
 export class UserAuthenticationController {
   public static async create (req: express.Request, res: express.Response): Promise<void>
   {
-    const { username, email, password } = req.body;
+    const { username, totalBudget, email, password } = req.body;
     const duplicateUser = await User.findOne({$or: [
       { email },
       { username }
@@ -20,7 +20,7 @@ export class UserAuthenticationController {
       return;
     }
 
-    const user = new User({ username: username.toLowerCase(), email: email.toLowerCase(), password });
+    const user = new User({ username: username.toLowerCase(), email: email.toLowerCase(), totalBudget, password });
     const token = jwt.sign(
       { _id: user._id, email, username },
       process.env.TOKEN_KEY || '',
