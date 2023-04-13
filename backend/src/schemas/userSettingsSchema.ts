@@ -1,7 +1,7 @@
-import { z } from 'zod';
+import Joi from 'joi'
 
-const userSettingsSchema = z.object({
-  totalBudget: z.number().max(9999999),
+const userSettingsSchema = Joi.object({
+  totalBudget: Joi.number().max(9999999),
 });
 
 export default userSettingsSchema;

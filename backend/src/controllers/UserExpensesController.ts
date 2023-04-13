@@ -63,6 +63,8 @@ export class UserExpensesController {
       user.save();
     }
 
+    user.password = null;
+
     try {
       await expense.save();
       res.status(201).json({ expense, user });

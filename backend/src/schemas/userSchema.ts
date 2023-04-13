@@ -1,9 +1,9 @@
-import { z } from 'zod';
+import Joi from 'joi'
 
-const userSchema = z.object({
-  username: z.string().max(255),
-  email: z.string().email({ message: 'Invalid email address' }),
-  password: z.string()
+const userSchema = Joi.object({
+  username: Joi.string().max(255),
+  email: Joi.string().email(),
+  password: Joi.string()
 });
 
 export default userSchema;
