@@ -1,11 +1,11 @@
-import { z } from 'zod';
+import Joi from "joi";
 
-const userExpensesSchema = z.object({
-  name: z.string(),
-  total: z.string().max(999999).min(0),
-  date: z.string(),
-  description: z.string(),
-  category: z.string(),
+const userExpensesSchema = Joi.object({
+  name: Joi.string().required(),
+  total: Joi.number().max(999999).min(0),
+  date: Joi.string(),
+  description: Joi.string().allow(''),
+  category: Joi.string(),
 });
 
 export default userExpensesSchema;
