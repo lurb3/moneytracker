@@ -5,7 +5,7 @@ const userExpenses = new mongoose.Schema({
   total: { type: Number, required: true },
   date: { type: Date, required: true },
   description: { type: String, },
-  category: { type: String },
+  category: { type: String, required: true },
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 });
 

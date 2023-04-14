@@ -5,11 +5,14 @@ interface UserPreSave {
   password: string,
 }
 
+const defaultCategories = ['Technology', 'Health & well being', 'Home bills', 'Food', 'Debt', 'Misc'];
+
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
   totalBudget: { type: Number, default: 0 },
+  categories: { type: Array, default: defaultCategories },
   token: { type: String },
   createdAt: { type: Date, default: Date.now },
 });
