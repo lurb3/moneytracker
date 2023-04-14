@@ -12,6 +12,7 @@
   ### Expenses
     - Edit / delete expenses
     - Change calendar to add visualization of days that have expenses (Low priority, but def nice to have)
+    - Add defined Categories and allow user to crud these categories (WIP)
   ### Documents
     - Upload documents (receipts, invoice, etc.)
     - CRUD documents (add a place to manage these documents)
