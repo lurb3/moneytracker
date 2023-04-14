@@ -58,15 +58,19 @@ export class UserExpensesController {
     const userSettings = await UserSettings.findOne({ user: userId });
     const user = await User.findById(userId);
 
+    if (!user.categories.includes(category)) {
+      res.status(400).send('No category found for this user.');
+      return;
+    }
+
     if (userSettings.updateTotalBudget) {
       user.totalBudget = user.totalBudget - parseFloat(expense.total);
       user.save();
     }
 
-    user.password = null;
-
     try {
       await expense.save();
+      user.password = null;
       res.status(201).json({ expense, user });
     } catch (error) {
       console.log(error)
