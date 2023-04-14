@@ -7,12 +7,14 @@ const userSlice = createSlice({
     email: '',
     totalBudget: 0,
     _id: '',
+    categories: [],
     settings: {}
   },
   reducers: {
     setUser: (state, { payload }) => {
       state.username = payload.username;
       state.email = payload.email;
+      state.categories = payload.categories;
       state.totalBudget = payload.totalBudget;
       state._id = payload._id;
     },

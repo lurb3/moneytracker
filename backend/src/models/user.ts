@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
 userSchema.pre<UserPreSave>('save', async function(next: () => any) {
   try {
     // Generate a salt and hash the password
-    const salt = await bcrypt.genSalt(10);
+    const salt = 10;
     const passwordHash = await bcrypt.hash(this.password, salt);
 
     // Set the hashed password on the user document
