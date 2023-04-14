@@ -1,4 +1,4 @@
-# moneytracker
+# Moneytracker (I don't like this name but wtv)
   This is a personal project created with the goal to improve my skills with react/redux and nodejs/mongodb and have a personal space to store things related to payments.
 
   It will scale to things beyond just tracking expenses. Manage documents, track time and add hourly rates, set an agenda and alerts, etc.
@@ -8,7 +8,7 @@
   - Set a total budget and keep track of it according to spendings.
   - View all expenses on a date interval.
 
-  ## Main things to work on
+  ## BackLog
   ### Expenses
     - Edit / delete expenses
     - Change calendar to add visualization of days that have expenses (Low priority, but def nice to have)
