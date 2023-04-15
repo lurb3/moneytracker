@@ -1,10 +1,12 @@
+import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { DatePicker } from 'antd';
+import { Button, DatePicker, Input, Modal, Select } from 'antd';
 import Joi from 'joi';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from "react-hook-form";
-import { useDispatch } from 'react-redux';
-import { actions as userActions } from 'store/reducers/userReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { actions as userActions, selectors as userSelector } from 'store/reducers/userReducer';
 import Swal from 'sweetalert2';
 import useAxios from 'utils/axios.interceptors';
 import './expensesForm.scss';
@@ -19,9 +21,24 @@ const ExpenseSchema = Joi.object({
 
 const ExpensesForm = ({ isOpen = false, setIsOpen = () => {} }) => {
   const [ expenseErrorMessage, setExpenseErrorMessage ] = useState('');
+
+  const [openModal, setOpenModal] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [ newCategory, setNewCategory ] = useState('');
+
   const api = useAxios();
   const { register, handleSubmit, control, setValue, reset, formState: { errors } } = useForm({ resolver: joiResolver(ExpenseSchema) });
   const dispatch = useDispatch();
+  const user = useSelector(userSelector.getUser || {});
+
+  useEffect(() => {
+    reset();
+  }, [reset])
+
+  useEffect(() => {
+    setNewCategory('');
+    console.log('qweqw')
+  }, [openModal])
 
   if (!isOpen) return null;
 
@@ -29,7 +46,6 @@ const ExpensesForm = ({ isOpen = false, setIsOpen = () => {} }) => {
     try {
       const res = await api.post('/api/user_expenses', data);
       dispatch(userActions.setUserBudget({totalBudget: res?.data?.user?.totalBudget}));
-
       Swal.fire({
         icon: 'success',
         title: 'Expense created',
@@ -53,40 +69,152 @@ const ExpensesForm = ({ isOpen = false, setIsOpen = () => {} }) => {
     setExpenseErrorMessage('');
   }
 
+  const handleOk = async () => {
+    if (!newCategory) return;
+    setConfirmLoading(true);
+    const data = {
+      categories: [...user.categories, newCategory]
+    };
+    try {
+      const res = await api.put(`/api/user/${user._id}`, data);
+      dispatch(userActions.setUser(res.data));
+      Swal.fire({
+        icon: 'success',
+        title: 'Categories updated',
+        showConfirmButton: false,
+        timer: 1500
+      }).then(() => {
+        setOpenModal(false);
+        setConfirmLoading(false);
+      })
+    } catch(e) {
+      setOpenModal(false);
+      Swal.fire({
+        title: 'Failed to update categories',
+        text: e.message ?? 'Unknown error',
+        icon: 'error',
+        confirmButtonText: 'Close',
+      })
+    }
+  };
+
+  const handleCancel = () => {
+    setOpenModal(false);
+  };
+
   return (
     <div className='expensesFormWrapper'>
+      <Modal
+        title="Add category"
+        open={openModal}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+      >
+        <Input
+          className='mb-1'
+          size="large"
+          placeholder='Category name'
+          value={newCategory}
+          onChange={(e) => {
+            setNewCategory(e.target.value);
+          }}
+        />
+      </Modal>
       <div className='closeForm' onClick={() => setIsOpen(false)}></div>
       <form className='expensesFormCard' onSubmit={handleSubmit(onSubmit)}>
-        <input
-          className={`inputField ${errors?.name ? 'inputError' : ''}`}
-          type='text'
-          placeholder='Name'
+        <Controller
+          control={control}
           name='name'
+          defaultValue=''
+          render={() => (
+            <Input
+              className='mb-1'
+              size="large"
+              placeholder='Name'
+              onChange={(e) => {
+                setValue('name', e.target.value);
+              }}
+              status={errors?.name ? 'error' : ''}
+            />
+          )}
           {...register("name", removeErrors)}
+          ref={null}
         />
         { errors.name && <span className='errorMessage'>{errors.name.message}</span> }
-        <input
-          className={`inputField ${errors?.category ? 'inputError' : ''}`}
-          type='text'
-          placeholder='Category'
-          name='email'
-          {...register("category", removeErrors)}
-        />
+        <div className='mb-1 categoryWrapper'>
+          <Controller
+            control={control}
+            name='category'
+            render={() => (
+              <Select
+                  status={errors?.category ? 'error' : ''}
+                  showSearch
+                  size="large"
+                  className='mr-1 w-100'
+                  placeholder="Search category"
+                  optionFilterProp="children"
+                  filterOption={(input, option) => (option?.label.toLowerCase() ?? '').includes(input.toLowerCase())}
+                  filterSort={(optionA, optionB) =>
+                      (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                  }
+                  options={
+                    user.categories.map((category) => {
+                      return {
+                        value: category,
+                        label: category
+                      }
+                    })
+                  }
+                  onChange={(value) => {
+                    setValue('category', value);
+                  }}
+              />
+            )}
+            {...register("category", removeErrors)}
+            ref={null}
+          />
+          <div>
+            <FontAwesomeIcon icon={faCirclePlus} size='2x' color='#00b96b' onClick={() => setOpenModal(true)}/>
+          </div>
+        </div>
         { errors.category && <span className='errorMessage'>{errors.category.message}</span> }
-        <input
-          className={`inputField ${errors?.description ? 'inputError' : ''}`}
-          type='text'
-          placeholder='Brief description'
+        <Controller
+          control={control}
           name='description'
+          defaultValue=''
+          render={() => (
+            <Input
+              className='mb-1'
+              size="large"
+              placeholder='Description'
+              onChange={(e) => {
+                setValue('description', e.target.value);
+              }}
+              status={errors?.description ? 'error' : ''}
+            />
+          )}
           {...register("description", removeErrors)}
+          ref={null}
         />
         { errors.description && <span className='errorMessage'>{errors.description.message}</span> }
-        <input
-          className={`inputField ${errors?.total ? 'inputError' : ''}`}
-          type='number'
-          placeholder='Total spent'
+        <Controller
+          control={control}
           name='total'
-          {...register("total",removeErrors)}
+          defaultValue=''
+          render={() => (
+            <Input
+              className='mb-1'
+              size="large"
+              placeholder='Total spent'
+              onChange={(e) => {
+                setValue('total', e.target.value);
+              }}
+              status={errors?.total ? 'error' : ''}
+            />
+          )}
+          {...register("total", removeErrors)}
+          ref={null}
         />
         { errors.total && <span className='errorMessage'>{errors.total.message}</span> }
         <Controller
@@ -94,14 +222,16 @@ const ExpensesForm = ({ isOpen = false, setIsOpen = () => {} }) => {
           name='date'
           render={() => (
             <DatePicker
-            className={`inputField ${errors?.date ? 'inputError' : ''}`}
               format={'DD-MM-YYYY'}
               onChange={(e, value) => {
                 setValue('date', value);
-                removeErrors();
               }}
+              size="large"
+              status={errors?.date ? 'error' : ''}
             />
           )}
+          {...register("date", removeErrors)}
+          ref={null}
         />
         { errors.date && <span className='errorMessage'>{errors.date.message}</span> }
         <input className='primaryButton' type='submit' value='Add expense' />

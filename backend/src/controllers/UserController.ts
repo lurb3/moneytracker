@@ -45,8 +45,8 @@ export class UserController {
 
   public static async update (req: AuthenticatedRequest<express.Request>, res: express.Response): Promise<void>
   {
-    const { totalBudget } = req.body;
-    const update = { totalBudget };
+    const { totalBudget, categories } = req.body;
+    const update = { totalBudget, categories };
     const options = {
       new: true, // return the modified document
     };
