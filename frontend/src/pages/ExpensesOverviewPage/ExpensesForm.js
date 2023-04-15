@@ -1,5 +1,7 @@
+import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { DatePicker, Input, Select } from 'antd';
+import { Button, DatePicker, Input, Modal, Select } from 'antd';
 import Joi from 'joi';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from "react-hook-form";
@@ -19,14 +21,24 @@ const ExpenseSchema = Joi.object({
 
 const ExpensesForm = ({ isOpen = false, setIsOpen = () => {} }) => {
   const [ expenseErrorMessage, setExpenseErrorMessage ] = useState('');
+
+  const [openModal, setOpenModal] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [ newCategory, setNewCategory ] = useState('');
+
   const api = useAxios();
-  const { register, handleSubmit, control, setValue, reset, getValues, formState: { errors } } = useForm({ resolver: joiResolver(ExpenseSchema) });
+  const { register, handleSubmit, control, setValue, reset, formState: { errors } } = useForm({ resolver: joiResolver(ExpenseSchema) });
   const dispatch = useDispatch();
   const user = useSelector(userSelector.getUser || {});
-  console.log(getValues())
+
   useEffect(() => {
-    reset()
+    reset();
   }, [reset])
+
+  useEffect(() => {
+    setNewCategory('');
+    console.log('qweqw')
+  }, [openModal])
 
   if (!isOpen) return null;
 
@@ -34,7 +46,6 @@ const ExpensesForm = ({ isOpen = false, setIsOpen = () => {} }) => {
     try {
       const res = await api.post('/api/user_expenses', data);
       dispatch(userActions.setUserBudget({totalBudget: res?.data?.user?.totalBudget}));
-      console.log(res.data.expense)
       Swal.fire({
         icon: 'success',
         title: 'Expense created',
@@ -58,8 +69,58 @@ const ExpensesForm = ({ isOpen = false, setIsOpen = () => {} }) => {
     setExpenseErrorMessage('');
   }
 
+  const handleOk = async () => {
+    if (!newCategory) return;
+    setConfirmLoading(true);
+    const data = {
+      categories: [...user.categories, newCategory]
+    };
+    try {
+      const res = await api.put(`/api/user/${user._id}`, data);
+      dispatch(userActions.setUser(res.data));
+      Swal.fire({
+        icon: 'success',
+        title: 'Categories updated',
+        showConfirmButton: false,
+        timer: 1500
+      }).then(() => {
+        setOpenModal(false);
+        setConfirmLoading(false);
+      })
+    } catch(e) {
+      setOpenModal(false);
+      Swal.fire({
+        title: 'Failed to update categories',
+        text: e.message ?? 'Unknown error',
+        icon: 'error',
+        confirmButtonText: 'Close',
+      })
+    }
+  };
+
+  const handleCancel = () => {
+    setOpenModal(false);
+  };
+
   return (
     <div className='expensesFormWrapper'>
+      <Modal
+        title="Add category"
+        open={openModal}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+      >
+        <Input
+          className='mb-1'
+          size="large"
+          placeholder='Category name'
+          value={newCategory}
+          onChange={(e) => {
+            setNewCategory(e.target.value);
+          }}
+        />
+      </Modal>
       <div className='closeForm' onClick={() => setIsOpen(false)}></div>
       <form className='expensesFormCard' onSubmit={handleSubmit(onSubmit)}>
         <Controller
@@ -81,38 +142,42 @@ const ExpensesForm = ({ isOpen = false, setIsOpen = () => {} }) => {
           ref={null}
         />
         { errors.name && <span className='errorMessage'>{errors.name.message}</span> }
-
-        <Controller
-          control={control}
-          name='category'
-          render={() => (
-            <Select
-                status={errors?.category ? 'error' : ''}
-                showSearch
-                size="large"
-                className='mb-1'
-                placeholder="Search category"
-                optionFilterProp="children"
-                filterOption={(input, option) => (option?.label.toLowerCase() ?? '').includes(input.toLowerCase())}
-                filterSort={(optionA, optionB) =>
-                    (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                }
-                options={
-                  user.categories.map((category) => {
-                    return {
-                      value: category,
-                      label: category
-                    }
-                  })
-                }
-                onChange={(value) => {
-                  setValue('category', value);
-                }}
-            />
-          )}
-          {...register("category", removeErrors)}
-          ref={null}
-        />
+        <div className='mb-1 categoryWrapper'>
+          <Controller
+            control={control}
+            name='category'
+            render={() => (
+              <Select
+                  status={errors?.category ? 'error' : ''}
+                  showSearch
+                  size="large"
+                  className='mr-1 w-100'
+                  placeholder="Search category"
+                  optionFilterProp="children"
+                  filterOption={(input, option) => (option?.label.toLowerCase() ?? '').includes(input.toLowerCase())}
+                  filterSort={(optionA, optionB) =>
+                      (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                  }
+                  options={
+                    user.categories.map((category) => {
+                      return {
+                        value: category,
+                        label: category
+                      }
+                    })
+                  }
+                  onChange={(value) => {
+                    setValue('category', value);
+                  }}
+              />
+            )}
+            {...register("category", removeErrors)}
+            ref={null}
+          />
+          <div>
+            <FontAwesomeIcon icon={faCirclePlus} size='2x' color='#00b96b' onClick={() => setOpenModal(true)}/>
+          </div>
+        </div>
         { errors.category && <span className='errorMessage'>{errors.category.message}</span> }
         <Controller
           control={control}
