@@ -8,14 +8,15 @@
   - Set a total budget and keep track of it according to spendings.
   - View all expenses on a date interval.
 
+  ## Recent changes (This will most likely be outdated)
+    - Add defined Categories and allow user to crud these categories (missing delete, no need for updated) 15/04/2023
+
   ## WIP before next deployment (This will most likely be outdated)
-    - Add defined Categories and allow user to crud these categories
     - Edit / delete expenses
 
   ## BackLog
   ### Expenses
     - Edit / delete expenses (WIP)
-    - Add defined Categories and allow user to crud these categories (WIP)
     - Add recurring expense (every x days/month add expense). Maybe this will need a daily cron, or some other strategy
     - Change calendar to add visualization of days that have expenses (Low priority, but def nice to have)
   ### Documents
