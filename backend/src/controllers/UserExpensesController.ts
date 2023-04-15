@@ -50,7 +50,8 @@ export class UserExpensesController {
   public static async create (req: AuthenticatedRequest<express.Request>, res: express.Response): Promise<void>
   {
     let { name, total, date = new Date().toISOString(), description, category } = req.body;
-
+    console.log('----', date)
+    return;
     date = parse(date, 'dd-MM-yyyy', new Date());
 
     const userId = req.user._id;
