@@ -17,6 +17,15 @@ const userSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+userSchema.set('toJSON', {
+  transform: function(doc, ret, options) {
+    delete ret.password;
+    return ret;
+  },
+  versionKey: false,
+  virtuals: true
+});
+
 userSchema.pre<UserPreSave>('save', async function(next: () => any) {
   try {
     // Generate a salt and hash the password

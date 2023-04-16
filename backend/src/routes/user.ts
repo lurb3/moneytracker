@@ -6,6 +6,6 @@ const userRoute = Router();
 
 userRoute.get('/user/:userId', verifyToken, UserController.show);
 userRoute.delete('/user/:userId', verifyToken, UserController.delete);
-userRoute.put('/user/:userId', verifyToken, UserController.update);
+userRoute.patch('/user/:userId', verifyToken, UserController.update);
 
 export default userRoute;

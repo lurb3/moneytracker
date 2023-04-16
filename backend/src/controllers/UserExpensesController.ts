@@ -54,23 +54,23 @@ export class UserExpensesController {
     date = parse(date, 'dd-MM-yyyy', new Date());
 
     const userId = req.user._id;
-    const expense = new UserExpenses({ name, total, date, description, category, user: userId });
-    const userSettings = await UserSettings.findOne({ user: userId });
-    const user = await User.findById(userId);
-
-    if (!user.categories.includes(category)) {
-      res.status(400).send('No category found for this user.');
-      return;
-    }
-
-    if (userSettings.updateTotalBudget) {
-      user.totalBudget = user.totalBudget - parseFloat(expense.total);
-      user.save();
-    }
 
     try {
+      const expense = new UserExpenses({ name, total, date, description, category, user: userId });
+      const userSettings = await UserSettings.findOne({ user: userId });
+      const user = await User.findById(userId);
+  
+      if (!user.categories.includes(category)) {
+        res.status(404).send('No category found for this user.');
+        return;
+      }
+  
+      if (userSettings.updateTotalBudget) {
+        user.totalBudget = user.totalBudget - parseFloat(expense.total);
+        await user.save();
+      }
+
       await expense.save();
-      user.password = null;
       res.status(201).json({ expense, user });
     } catch (error) {
       console.log(error)
@@ -78,4 +78,85 @@ export class UserExpensesController {
     }
   }
 
+  public static async update (req: AuthenticatedRequest<express.Request>, res: express.Response): Promise<void>
+  {
+    let { name, category, description, total, date } = req.body;
+
+    let update = { name, category, description, total, date };
+    const filters = {
+      user: req.user._id,
+      _id: req.params.expense
+    }
+
+    update.date = parse(date, 'dd-MM-yyyy', new Date());
+
+    try {
+      const userSettings = await UserSettings.findOne({ user: req.user._id });
+      const user = await User.findById(req.user._id);
+
+      if (!user.categories.includes(category)) {
+        res.status(404).send('No category found for this user.');
+        return;
+      }
+
+      const expense = await UserExpenses.findOne(filters)
+  
+      if (!expense) {
+        res.status(404).send('No expense found.');
+        return;
+      }
+  
+      if (userSettings.updateTotalBudget && expense.total !== total) {
+        user.totalBudget = (user.totalBudget + parseFloat(expense.total)) - total;
+        await user.save();
+      }
+  
+      Object.assign(expense, update);
+
+      await expense.save();
+
+      res.status(201).json({ expense, user });
+      return;
+
+    } catch(error) {
+      console.log(error)
+      res.status(400).send(error);
+    }
+  }
+
+  public static async delete (req: AuthenticatedRequest<express.Request>, res: express.Response): Promise <void>
+  {
+    const filters = {
+      user: req.user._id,
+      _id: req.params.expense
+    }
+
+    try {
+      const userSettings = await UserSettings.findOne({ user: req.user._id });
+      const user = await User.findById(req.user._id);
+
+      const expense = await UserExpenses.findOne(filters)
+
+      if (!expense) {
+        res.status(404).send('No expense found.');
+        return;
+      }
+
+      const total = expense.total;
+
+      await expense.delete();
+  
+      if (userSettings.updateTotalBudget) {
+        user.totalBudget = user.totalBudget + parseFloat(total);
+        await user.save();
+      }
+
+      res.status(200).json({ user });
+      return;
+
+    } catch(error) {
+      console.log(error)
+      res.status(400).send(error);
+    }
+  }
 }
