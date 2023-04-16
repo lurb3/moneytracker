@@ -82,13 +82,13 @@ export class UserExpensesController {
   {
     let { name, category, description, total, date } = req.body;
 
-    const update = { name, category, description, total, date };
+    let update = { name, category, description, total, date };
     const filters = {
       user: req.user._id,
       _id: req.params.expense
     }
 
-    date = parse(date, 'dd-MM-yyyy', new Date());
+    update.date = parse(date, 'dd-MM-yyyy', new Date());
 
     try {
       const userSettings = await UserSettings.findOne({ user: req.user._id });
@@ -116,6 +116,42 @@ export class UserExpensesController {
       await expense.save();
 
       res.status(201).json({ expense, user });
+      return;
+
+    } catch(error) {
+      console.log(error)
+      res.status(400).send(error);
+    }
+  }
+
+  public static async delete (req: AuthenticatedRequest<express.Request>, res: express.Response): Promise <void>
+  {
+    const filters = {
+      user: req.user._id,
+      _id: req.params.expense
+    }
+
+    try {
+      const userSettings = await UserSettings.findOne({ user: req.user._id });
+      const user = await User.findById(req.user._id);
+
+      const expense = await UserExpenses.findOne(filters)
+
+      if (!expense) {
+        res.status(404).send('No expense found.');
+        return;
+      }
+
+      const total = expense.total;
+
+      await expense.delete();
+  
+      if (userSettings.updateTotalBudget) {
+        user.totalBudget = user.totalBudget + parseFloat(total);
+        await user.save();
+      }
+
+      res.status(200).json({ user });
       return;
 
     } catch(error) {

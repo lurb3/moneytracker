@@ -24,7 +24,7 @@ const ExpenseSchema = Joi.object({
   date: Joi.date().required()
 });
 
-const ExpensesForm = ({ isOpen = false, setIsOpen = () => {}, isEditing = false, editExpense }) => {
+const ExpensesForm = ({ isOpen = false, setIsOpen = () => {}, isEditing = false, editExpense, loadData = () => {} }) => {
   const [ expenseErrorMessage, setExpenseErrorMessage ] = useState('');
   const [ openModal, setOpenModal ] = useState(false);
 
@@ -36,15 +36,19 @@ const ExpensesForm = ({ isOpen = false, setIsOpen = () => {}, isEditing = false,
   useEffect(() => {
     if (!isEditing) {
       reset();
+    } else {
+      setValue('category', editExpense?.category)
+      setValue('date', editExpense?.date)
     }
     setExpenseErrorMessage('');
-  }, [isOpen, isEditing, reset]);
+  }, [isOpen, isEditing, reset, setValue, editExpense]);
 
   const onSubmit = async (data) => {
     try {
       const formatData = {...data};
-      formatData.date = dayjs(formatData.date).format('DD-MM-YYYY');
       let res = null;
+
+      formatData.date = dayjs(formatData.date).format('DD-MM-YYYY');
 
       if  (isEditing) {
         res = await api.put(`/api/user_expenses/${editExpense._id}`, formatData);
@@ -60,14 +64,41 @@ const ExpensesForm = ({ isOpen = false, setIsOpen = () => {}, isEditing = false,
       })
     setIsOpen(false);
     reset();
+    loadData();
     } catch(e) {
       Swal.fire({
         title: `Failed to save expense`,
-        text: e.message ?? 'Unknown error',
+        text: e.response.data ?? e.message,
         icon: 'error',
         confirmButtonText: 'Close',
       });
       setExpenseErrorMessage('Failed to save expense');
+    }
+  }
+
+  const deleteExpense = async (e) => {
+    e.preventDefault();
+
+    try {
+     const res = await api.delete(`/api/user_expenses/${editExpense._id}`);
+      dispatch(userActions.setUserBudget({totalBudget: res?.data?.user?.totalBudget}));
+      Swal.fire({
+        icon: 'success',
+        title: `Expense deleted`,
+        showConfirmButton: false,
+        timer: 1500
+      })
+      setIsOpen(false);
+      reset();
+      loadData();
+    } catch(e) {
+      Swal.fire({
+        title: `Failed to delete expense`,
+        text: e.response.data ?? e.message,
+        icon: 'error',
+        confirmButtonText: 'Close',
+      });
+      setExpenseErrorMessage('Failed to delete expense');
     }
   }
 
@@ -175,7 +206,7 @@ const ExpensesForm = ({ isOpen = false, setIsOpen = () => {}, isEditing = false,
           </FormControl>
         </div>
         { isEditing ? <input className='primaryButton' type='submit' value='Edit expense' /> : <input className='primaryButton' type='submit' value='Add expense' /> }
-        { isEditing && <input className='alertButton' type='submit' value='Delete expense' /> }
+        { isEditing && <button className='alertButton' onClick={deleteExpense}>Delete expense</button> }
         {expenseErrorMessage && <p className='errorMessage'>{expenseErrorMessage}</p>}
       </form>
     </Modal>

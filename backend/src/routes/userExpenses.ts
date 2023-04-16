@@ -9,5 +9,6 @@ const userExpensesRoute = Router();
 userExpensesRoute.get('/user_expenses/', verifyToken, UserExpensesController.index);
 userExpensesRoute.post('/user_expenses/', validateSchema(userExpensesSchema), verifyToken, UserExpensesController.create);
 userExpensesRoute.put('/user_expenses/:expense', validateSchema(userExpensesSchema), verifyToken, UserExpensesController.update);
+userExpensesRoute.delete('/user_expenses/:expense', verifyToken, UserExpensesController.delete);
 
 export default userExpensesRoute;

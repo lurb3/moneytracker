@@ -55,7 +55,7 @@ const ExpensesOverviewPage = () => {
 
   return (
     <div className='pageWrapper'>
-      <ExpensesForm isOpen={openEditExpense} setIsOpen={setOpenEditExpense} isEditing={true} editExpense={editExpense} />
+      <ExpensesForm isOpen={openEditExpense} setIsOpen={setOpenEditExpense} isEditing={true} editExpense={editExpense} loadData={loadData} />
       <h1>Expenses Overview</h1>
       <div className='expensesWrapper'>
         <div className='expensesHeader'>
