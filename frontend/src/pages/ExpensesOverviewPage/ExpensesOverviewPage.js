@@ -7,10 +7,13 @@ import { actions as expensesActions, selectors as expensesSelector } from 'store
 import Swal from 'sweetalert2';
 import useAxios from 'utils/axios.interceptors';
 import CategoryPlaceholder from '../../assets/category-placeholder.svg';
+import ExpensesForm from './ExpensesForm';
 import './expensesOverview.scss';
 
 const ExpensesOverviewPage = () => {
   const dateFormat = 'DD-MM-YYYY';
+  const [ openEditExpense, setOpenEditExpense] = useState(false);
+  const [ editExpense, setEditExpense ] = useState({});
   const [ isLoading, setIsLoading ] = useState(false);
   const [ timeInterval, setTimeInterval ] = useState([dayjs(), dayjs()]);
   const expenses = useSelector(expensesSelector.getExpenses || []);
@@ -41,12 +44,18 @@ const ExpensesOverviewPage = () => {
     }
   }
 
+  const handleEdit = (expense) => {
+    setOpenEditExpense(true)
+    setEditExpense(expense)
+  }
+
   useEffect(() => {
     loadData();
   }, []);
 
   return (
     <div className='pageWrapper'>
+      <ExpensesForm isOpen={openEditExpense} setIsOpen={setOpenEditExpense} isEditing={true} editExpense={editExpense} />
       <h1>Expenses Overview</h1>
       <div className='expensesWrapper'>
         <div className='expensesHeader'>
@@ -66,7 +75,7 @@ const ExpensesOverviewPage = () => {
         <div className='expensesContent'>
           {
             expenses.map((expense) => (
-              <div className='expensesCard' key={expense._id}>
+              <div className='expensesCard' key={expense._id} onClick={() => handleEdit(expense)}>
                 <img className='categoryImage' src={CategoryPlaceholder} alt='Category placeholder'/>
                 <div className='cardContent'>
                   <span className='expenseName'>{expense.name}</span>

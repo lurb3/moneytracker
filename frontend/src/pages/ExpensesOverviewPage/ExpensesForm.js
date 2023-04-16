@@ -6,9 +6,10 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Modal } from 'antd';
 import CategoryModal from 'components/CategoryModal/CategoryModal';
+import dayjs from 'dayjs';
 import Joi from 'joi';
 import React, { useEffect, useState } from 'react';
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { actions as userActions, selectors as userSelector } from 'store/reducers/userReducer';
 import Swal from 'sweetalert2';
@@ -23,7 +24,7 @@ const ExpenseSchema = Joi.object({
   date: Joi.date().required()
 });
 
-const ExpensesForm = ({ isOpen = false, setIsOpen = () => {}, isEditing = false }) => {
+const ExpensesForm = ({ isOpen = false, setIsOpen = () => {}, isEditing = false, editExpense }) => {
   const [ expenseErrorMessage, setExpenseErrorMessage ] = useState('');
   const [ openModal, setOpenModal ] = useState(false);
 
@@ -36,15 +37,24 @@ const ExpensesForm = ({ isOpen = false, setIsOpen = () => {}, isEditing = false 
     if (!isEditing) {
       reset();
     }
-  }, [isOpen, isEditing, reset])
+    setExpenseErrorMessage('');
+  }, [isOpen, isEditing, reset]);
 
   const onSubmit = async (data) => {
     try {
-      const res = await api.post('/api/user_expenses', data);
+      const formatData = {...data};
+      formatData.date = dayjs(formatData.date).format('DD-MM-YYYY');
+      let res = null;
+
+      if  (isEditing) {
+        res = await api.put(`/api/user_expenses/${editExpense._id}`, formatData);
+      } else {
+        res = await api.post('/api/user_expenses', formatData);
+      }
       dispatch(userActions.setUserBudget({totalBudget: res?.data?.user?.totalBudget}));
       Swal.fire({
         icon: 'success',
-        title: 'Expense created',
+        title: `Expense saved`,
         showConfirmButton: false,
         timer: 1500
       })
@@ -52,12 +62,12 @@ const ExpensesForm = ({ isOpen = false, setIsOpen = () => {}, isEditing = false 
     reset();
     } catch(e) {
       Swal.fire({
-        title: 'Failed to create expense',
+        title: `Failed to save expense`,
         text: e.message ?? 'Unknown error',
         icon: 'error',
         confirmButtonText: 'Close',
       });
-      setExpenseErrorMessage('Failed to create expense');
+      setExpenseErrorMessage('Failed to save expense');
     }
   }
 
@@ -67,7 +77,7 @@ const ExpensesForm = ({ isOpen = false, setIsOpen = () => {}, isEditing = false 
 
   return (
     <Modal
-      title="Add expense"
+      title={isEditing ? 'Edit expense blablala' : 'Add expense'}
       open={isOpen}
       onOk={() => {}}
       onCancel={() => setIsOpen(false)}
@@ -82,19 +92,18 @@ const ExpensesForm = ({ isOpen = false, setIsOpen = () => {}, isEditing = false 
             error={Boolean(errors.name)}
             name='name'
             label="Name"
-            defaultValue=""
+            value={isEditing ? editExpense.name : watch('name')}
             helperText={errors.name ? errors.name.message : ''}
             {...register("name", removeErrors)}
           />
         </div>
         <div className='mb-2 categoryWrapper'>
           <FormControl fullWidth error={Boolean(errors.category)}>
-            <InputLabel id="demo-simple-select-label">Age</InputLabel>
+            <InputLabel id="category-label">Category</InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={watch('category') || ''}
-              label="Age"
+              labelId="category-label"
+              value={isEditing ? editExpense.category : watch('category')}
+              label="Category"
               onChange={(e) => setValue('category', e.target.value)}
               name='category'
             >
@@ -112,7 +121,7 @@ const ExpensesForm = ({ isOpen = false, setIsOpen = () => {}, isEditing = false 
               )  : ''
             }
           </FormControl>
-          <div>
+          <div className='ml-1'>
             <FontAwesomeIcon icon={faCirclePlus} size='2x' color='#00b96b' onClick={() => setOpenModal(true)}/>
           </div>
         </div>
@@ -122,7 +131,7 @@ const ExpensesForm = ({ isOpen = false, setIsOpen = () => {}, isEditing = false 
             error={Boolean(errors.description)}
             name='description'
             label="Description"
-            defaultValue=""
+            value={isEditing ? editExpense.description : watch('description')}
             helperText={errors.description ? errors.description.message : ''}
             {...register("description", removeErrors)}
           />
@@ -133,7 +142,7 @@ const ExpensesForm = ({ isOpen = false, setIsOpen = () => {}, isEditing = false 
             error={Boolean(errors.total)}
             name='total'
             label="Total"
-            defaultValue=""
+            value={isEditing ? editExpense.total : watch('total')}
             type='number'
             helperText={errors.total ? errors.total.message : ''}
             {...register("total", removeErrors)}
@@ -142,26 +151,31 @@ const ExpensesForm = ({ isOpen = false, setIsOpen = () => {}, isEditing = false 
         <div>
           <FormControl fullWidth error={Boolean(errors.date)}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker label="Basic date picker" 
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        inputRef={register('date')}
-                      />
-                    )}
-                    onChange={(date) => setValue('date', date.toString())}
+              <DatePicker
+                disableFuture
+                format='DD/MM/YYYY'
+                value={isEditing ? dayjs(editExpense.date) : dayjs(watch('date'))}
+                label="Select date" 
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    inputRef={register('date')}
                   />
-                  {
-                    errors.date ? (
-                      <FormHelperText>
-                        {errors.date.message}
-                      </FormHelperText>
-                    )  : ''
-                  }
+                )}
+                onChange={(date) => setValue('date', date.toString())}
+              />
+              {
+                errors.date ? (
+                  <FormHelperText>
+                    {errors.date.message}
+                  </FormHelperText>
+                )  : ''
+              }
             </LocalizationProvider>
           </FormControl>
         </div>
-        <input className='primaryButton' type='submit' value='Add expense' />
+        { isEditing ? <input className='primaryButton' type='submit' value='Edit expense' /> : <input className='primaryButton' type='submit' value='Add expense' /> }
+        { isEditing && <input className='alertButton' type='submit' value='Delete expense' /> }
         {expenseErrorMessage && <p className='errorMessage'>{expenseErrorMessage}</p>}
       </form>
     </Modal>

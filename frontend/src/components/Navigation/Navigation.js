@@ -30,15 +30,16 @@ const Navigation = () => {
 
   return (
     <>
-      <ExpensesForm isOpen={openForm} setIsOpen={setOpenForm} loadExpenses={() => {}} />
+      <ExpensesForm isOpen={openForm} setIsOpen={setOpenForm} />
       <div className='bottomNavigation'>
-        <FontAwesomeIcon icon={faHouse} size='2x' color='#4a4a4a' onClick={() => navigate('/expenses-overview')}/>
-        <FontAwesomeIcon onClick={() => setOpenForm(true)} icon={faCirclePlus} size='3x' color='#00b96b'/>
+        <FontAwesomeIcon icon={faHouse} size='2x' color='#4a4a4a' onClick={() => navigate('/expenses-overview')} className='cursor'/>
+        <FontAwesomeIcon onClick={() => setOpenForm(true)} icon={faCirclePlus} size='3x' color='#00b96b' className='cursor'/>
         <Dropdown
           menu={{
             items,
           }}
           trigger={['click']}
+          className='cursor'
         >
           <FontAwesomeIcon icon={faGear} size='2x' color='#4a4a4a'/>
         </Dropdown>

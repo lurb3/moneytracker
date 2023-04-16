@@ -23,7 +23,7 @@ const CategoryModal = ({ openModal, setOpenModal }) => {
     };
 
     try {
-      const res = await api.put(`/api/user/${user._id}`, data);
+      const res = await api.patch(`/api/user/${user._id}`, data);
 
       dispatch(userActions.setUser(res.data));
       Swal.fire({

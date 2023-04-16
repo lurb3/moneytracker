@@ -50,28 +50,27 @@ export class UserExpensesController {
   public static async create (req: AuthenticatedRequest<express.Request>, res: express.Response): Promise<void>
   {
     let { name, total, date = new Date().toISOString(), description, category } = req.body;
-    console.log('----', date)
-    return;
+
     date = parse(date, 'dd-MM-yyyy', new Date());
 
     const userId = req.user._id;
-    const expense = new UserExpenses({ name, total, date, description, category, user: userId });
-    const userSettings = await UserSettings.findOne({ user: userId });
-    const user = await User.findById(userId);
-
-    if (!user.categories.includes(category)) {
-      res.status(400).send('No category found for this user.');
-      return;
-    }
-
-    if (userSettings.updateTotalBudget) {
-      user.totalBudget = user.totalBudget - parseFloat(expense.total);
-      user.save();
-    }
 
     try {
+      const expense = new UserExpenses({ name, total, date, description, category, user: userId });
+      const userSettings = await UserSettings.findOne({ user: userId });
+      const user = await User.findById(userId);
+  
+      if (!user.categories.includes(category)) {
+        res.status(404).send('No category found for this user.');
+        return;
+      }
+  
+      if (userSettings.updateTotalBudget) {
+        user.totalBudget = user.totalBudget - parseFloat(expense.total);
+        await user.save();
+      }
+
       await expense.save();
-      user.password = null;
       res.status(201).json({ expense, user });
     } catch (error) {
       console.log(error)
@@ -79,4 +78,49 @@ export class UserExpensesController {
     }
   }
 
+  public static async update (req: AuthenticatedRequest<express.Request>, res: express.Response): Promise<void>
+  {
+    let { name, category, description, total, date } = req.body;
+
+    const update = { name, category, description, total, date };
+    const filters = {
+      user: req.user._id,
+      _id: req.params.expense
+    }
+
+    date = parse(date, 'dd-MM-yyyy', new Date());
+
+    try {
+      const userSettings = await UserSettings.findOne({ user: req.user._id });
+      const user = await User.findById(req.user._id);
+
+      if (!user.categories.includes(category)) {
+        res.status(404).send('No category found for this user.');
+        return;
+      }
+
+      const expense = await UserExpenses.findOne(filters)
+  
+      if (!expense) {
+        res.status(404).send('No expense found.');
+        return;
+      }
+  
+      if (userSettings.updateTotalBudget && expense.total !== total) {
+        user.totalBudget = (user.totalBudget + parseFloat(expense.total)) - total;
+        await user.save();
+      }
+  
+      Object.assign(expense, update);
+
+      await expense.save();
+
+      res.status(201).json({ expense, user });
+      return;
+
+    } catch(error) {
+      console.log(error)
+      res.status(400).send(error);
+    }
+  }
 }
