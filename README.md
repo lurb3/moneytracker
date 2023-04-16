@@ -15,6 +15,10 @@
     - Edit / delete expenses
 
   ## BackLog
+  ### Admin
+    - Create admin panel/dashboard to get statistics of created users and user actions (don't track their expenses)
+    - Add user actions (edit/delete users)
+    - Track agendas when implemented (?)
   ### Expenses
     - Add pagination (Not very important rn but will be specially for desktop version)
     - Add recurring expense (every x days/month add expense). Maybe this will need a daily cron, or some other strategy
@@ -33,6 +37,9 @@
     - Add start/pause/stop counter (if pause keep counter in memory, even if user closes browser)
     - Add option to add rate for tracker (rate per minute/hour/day)
     - Add page to manage trackers (see list of time trackers and their details and if tracker has a rate, display total pay)
+  ### Agenda
+    - Simple agenda with reminder / notes
+    - Allow for future spending, scheduled on agenda
   ### Multiple cards
     - Add multiple cards to the platform and control spendings by card
     - Add total budget per card
