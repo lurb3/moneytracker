@@ -4,16 +4,17 @@
   It will scale to things beyond just tracking expenses. Manage documents, track time and add hourly rates, set an agenda and alerts, etc.
 
   This is what is working now:
-  - Add daily expenses.
+  - Manage daily expenses.
   - Set a total budget and keep track of it according to spendings.
   - View all expenses on a date interval.
 
   ## Recent changes (This will most likely be outdated)
     - Add defined Categories and allow user to crud these categories (missing delete, no need for updated) 15/04/2023
+    - Edit / delete expenses 16/04/2023
 
   ## WIP before next deployment (This will most likely be outdated)
-    - Edit / delete expenses
-
+    - Upload documents (receipts, invoice, etc.)
+    - Link document to expense
   ## BackLog
   ### Admin
     - Create admin panel/dashboard to get statistics of created users and user actions (don't track their expenses)
@@ -24,9 +25,7 @@
     - Add recurring expense (every x days/month add expense). Maybe this will need a daily cron, or some other strategy
     - Change calendar to add visualization of days that have expenses (Low priority, but def nice to have)
   ### Documents
-    - Upload documents (receipts, invoice, etc.)
     - CRUD documents (add a place to manage these documents)
-    - Link document to expense
     - Allow to add documents without expense associated
   ### Graphics / Statistics
     - Add general statistics (start by spendings per day / week / month)
