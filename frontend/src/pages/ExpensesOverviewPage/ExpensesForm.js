@@ -123,7 +123,7 @@ const ExpensesForm = ({ isOpen = false, setIsOpen = () => {}, isEditing = false,
             error={Boolean(errors.name)}
             name='name'
             label="Name"
-            value={isEditing ? editExpense.name : watch('name')}
+            defaultValue={isEditing ? editExpense.name : ''}
             helperText={errors.name ? errors.name.message : ''}
             {...register("name", removeErrors)}
           />
@@ -133,7 +133,7 @@ const ExpensesForm = ({ isOpen = false, setIsOpen = () => {}, isEditing = false,
             <InputLabel id="category-label">Category</InputLabel>
             <Select
               labelId="category-label"
-              value={isEditing ? editExpense.category : watch('category')}
+              defaultValue={isEditing ? editExpense.category : ''}
               label="Category"
               onChange={(e) => setValue('category', e.target.value)}
               name='category'
@@ -173,7 +173,7 @@ const ExpensesForm = ({ isOpen = false, setIsOpen = () => {}, isEditing = false,
             error={Boolean(errors.total)}
             name='total'
             label="Total"
-            value={isEditing ? editExpense.total : watch('total')}
+            defaultValue={isEditing ? editExpense.total : ''}
             type='number'
             helperText={errors.total ? errors.total.message : ''}
             {...register("total", removeErrors)}
@@ -185,7 +185,7 @@ const ExpensesForm = ({ isOpen = false, setIsOpen = () => {}, isEditing = false,
               <DatePicker
                 disableFuture
                 format='DD/MM/YYYY'
-                value={isEditing ? dayjs(editExpense.date) : dayjs(watch('date'))}
+                defaultValue={isEditing ? dayjs(editExpense.date) : ''}
                 label="Select date" 
                 renderInput={(params) => (
                   <TextField
