@@ -33,6 +33,11 @@ h1 {
   cursor: pointer;
   background-color: $primary-color;
   margin-top: 20px;
+  transition: background-color 0.3s;
+  &:hover {
+    background-color: #01814b;
+    transition: background-color 0.3s;
+  }
 }
 
 .secondaryButton {
@@ -45,6 +50,24 @@ h1 {
   cursor: pointer;
   background-color: #008b50;
   margin-top: 20px;
+}
+
+.alertButton {
+  color: #FCFCFC;
+  border-radius: 16px;
+  outline: 0;
+  border: 0;
+  padding: 15px 0px;
+  font-size: 18px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #db4141;
+  margin-top: 20px;
+  transition: background-color 0.3s;
+  &:hover {
+    background-color: #972d2d;
+    transition: background-color 0.3s;
+  }
 }
 
 .primaryLink {
@@ -73,13 +96,6 @@ h1 {
   margin-bottom: 0;
 }
 
-.errorMessage {
-  color: rgb(252, 48, 48);
-  text-align: left;
-  margin-top: 2px;
-  margin-bottom: 10px;
-}
-
 @media(max-width: 650px) { 
   .ant-picker-panels { 
     flex-direction: column;
@@ -94,10 +110,18 @@ h1 {
   margin-right: 10px;
 }
 
+.ml-1 {
+  margin-left: 10px;
+}
+
 .mb-1 {
   margin-bottom: 10px;
 }
 
 .mb-2 {
   margin-bottom: 20px;
+}
+
+.cursor {
+  cursor: pointer;
 }

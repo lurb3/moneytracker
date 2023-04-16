@@ -24,6 +24,7 @@
     width: 100%;
     margin-top: 20px;
     overflow-y: scroll;
+    cursor: pointer;
     &::-webkit-scrollbar{
       display: none;
     }
@@ -36,7 +37,6 @@
       padding: 15px;
       margin-bottom: 20px;
       border-radius: 24px;
-      min-height: 89px;
 
       .categoryImage {
         max-width: 50px;
