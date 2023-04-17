@@ -21,6 +21,7 @@
     - Add user actions (edit/delete users)
     - Track agendas when implemented (?)
   ### Expenses
+    - Store totalbudget changes, by date (IMPORTANT)
     - Add pagination (Not very important rn but will be specially for desktop version)
     - Add recurring expense (every x days/month add expense). Maybe this will need a daily cron, or some other strategy
     - Change calendar to add visualization of days that have expenses (Low priority, but def nice to have)
